@@ -1,0 +1,58 @@
+╔════╗╔╗─╔╗╔╗─╔╗╔═╗─╔╗╔═══╗╔═══╗╔═══╗╔═══╗╔═══╗─╔╗─╔═══╗
+║╔╗╔╗║║║─║║║║─║║║║╚╗║║╚╗╔╗║║╔══╝║╔═╗║║╔═╗║║╔═╗║╔╝║─║╔═╗║
+╚╝║║╚╝║╚═╝║║║─║║║╔╗╚╝║─║║║║║╚══╗║╚═╝║║║─║║║╚══╗╚╗║─║║║║║
+──║║──║╔═╗║║║─║║║║╚╗║║─║║║║║╔══╝║╔╗╔╝║║─║║╚══╗║─║║─║║║║║
+──║║──║║─║║║╚═╝║║║─║║║╔╝╚╝║║╚══╗║║║╚╗║╚═╝║║╚═╝║╔╝╚╗║╚═╝║
+──╚╝──╚╝─╚╝╚═══╝╚╝─╚═╝╚═══╝╚═══╝╚╝╚═╝╚═══╝╚═══╝╚══╝╚═══╝
+<p><strong>Version</strong>: 10.22.12.23 Bêta</p>
+<p>Appareil s&eacute;curis&eacute; par ThunderSecurity</p>
+<p>Official UI by ShadowyCorporation</p>
+<p>&nbsp;</p>
+<p><strong>Connexion</strong></p>
+<p><label class="switch"><label class="switch">Internet (LOCAL)</label></label></p>
+<script>
+    // Récupérer l'adresse IP
+    function getIPAddress() {
+      fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          const ip = data.ip;
+          document.getElementById('ip-address').textContent = 'Adresse IP : ' + ip;
+        })
+        .catch(error => {
+          console.log('Une erreur s\'est produite lors de la récupération de l\'adresse IP :', error);
+        });
+    }
+  </script>
+</head>
+<body>
+  <p id="ip-address"></p>
+
+  <script>
+    // Appeler les fonctions de détection après le chargement de la page
+    window.addEventListener('load', function() {
+      getIPAddress();
+    });
+  </script>
+<label class="switch">
+    <input type="checkbox" class="checkbox" checked>
+    <div class="slider"></div>
+</label>
+<p><label class="switch"><label class="switch">ThunderOs Network</label></label></p>
+<label class="switch">
+    <input type="checkbox" class="checkbox" checked>
+    <div class="slider"></div>
+</label>
+<p><strong>Compte externe</strong></p>
+<p>Brave&nbsp;(Ext Desktop)</p>
+
+<head>
+    <title>ThunderStore Tiny</title>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+      
+    <!-- linking the stylesheet(CSS) -->
+    <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+
+
