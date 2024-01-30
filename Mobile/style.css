@@ -16,7 +16,7 @@
 body {
     height: 100vh;
     width: 100%;
-    background: url("https://picsum.photos/480/854");
+    background: url("https://source.unsplash.com/480x1080/?nature");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
