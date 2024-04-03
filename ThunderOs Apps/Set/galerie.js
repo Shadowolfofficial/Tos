@@ -68,5 +68,5 @@ window.addEventListener('load', function() {
 });
 
 document.getElementById("cameraButton").addEventListener("click", function() {
-    window.location.href = "/cam/index.html"; // Remplacez "https://www.example.com/camera" par l'URL de la page vers laquelle vous souhaitez rediriger l'utilisateur.
+    window.location.href = "cam/index.html"; // Remplacez par l'URL de la page.
 });
