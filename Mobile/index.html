@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ThunderUI">
+<link rel="apple-touch-icon" href="ThunderOs Apps/ThunderOs RMBa.png">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!--meta name="viewport" content="width=device-width, initial-scale=1.0"-->
+    <title>ThunderOs</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="statusbar.css">
+    <link rel="stylesheet" href="bottom.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="app.css">
+    <script src="jquery.js"></script>
+    <script src="script.js"></script>
+    <script src="openLink.js"></script>
+    <script src="time.js"></script>
+    <script src="common.js"></script>
+    <script src="app.js"></script>
+</head>  
+<body>
+    <div class="main">
+        <center class="left">
+          <p style="margin-top: 10px;"></p>
+          <iframe src="./clock/index.html" style="border-radius: 24px;" name="Clock" scrolling="no" frameborder="1" marginheight="0px" marginwidth="0px" height="135px" width="235px" allowfullscreen></iframe>
+                          <div class="heading">
+          <div class="textapp">
+</div> 
+</div>
+  <style>
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .icon {
+      display: inline-block;
+      margin-right: 20px;
+    }
+  </style>
+  <div class="container">
+<div class="icon">
+<input type="file" id="background-file" style="display:none;" />
+<img id="reset-background" src="effacer.png" width="60" height="60" onclick="resetBackground()" style="border-radius: 12px;">
+<p id="reset-background-text";">Effacer</p>
+<script>
+          document.body.addEventListener('dblclick', function() {
+              document.getElementById('background-file').click();
+          });
+
+          document.getElementById('background-file').addEventListener('change', function(event) {
+              const file = event.target.files[0];
+              if (file) {
+                  const reader = new FileReader();
+                  reader.onload = function(e) {
+                      localStorage.setItem('wallpaper', e.target.result);
+                      document.body.style.backgroundImage = `url(${e.target.result})`;
+                  };
+                  reader.readAsDataURL(file);
+              }
+          });
+
+          function resetBackground() {
+              localStorage.removeItem('wallpaper');
+              document.body.style.backgroundImage = '';
+          }
+
+          document.addEventListener('DOMContentLoaded', function() {
+              const savedImage = localStorage.getItem('wallpaper');
+              if (savedImage) {
+                  document.body.style.backgroundImage = `url(${savedImage})`;
+              }
+          });
+</script>
+    </div>
+<div class="icon" onclick='openApp("/app/discord.html","Discord","90%","90%")'>
+<img  src="/ThunderOs Apps/Discord.png" width="60" height="60" style="border-radius: 30%;">
+<p class="headingText">Discord</p>
+</div>
+<div class="icon" onclick='openApp("https://www.myinstants.com/fr/index/fr/","MyInstants","90%","90%")'>
+<img src="ThunderOs Apps/myinstants.png" width="60" height="60" style="border-radius: 30%;">
+<p class="headingText">MyInstants</p>
+</div>
+<div class="icon" onclick='openApp("./thundertv.html","ThunderTV","90%","90%")'>
+<img src="ThunderOs Apps/ThunderTv TNT.png" width="60" height="60" style="border-radius: 30%;">
+<p class="headingText">ThunderTV</p>
+</div>
+</div>          
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<style>
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+  <div class="container">
+    <img onclick="window.location.href='./blank.html'" src="ThunderOs-rb.png" alt="Centered Image">
+</div>
+<div class="right">   
+</div>
+</div>
+     <div class="bottom">
+        <div class="container">
+<div class="icon" style="background-image:url('VoltAI.png');" onclick='openApp("/Tos/ThunderOs\ Apps/voltai/index.html","VoltAI","90%","90%")'></div>
+            <!-- <div class="icon" style="background-image:url('icon/safari.png');" onclick='openApp("icon/index.html","2021","700px","1000px")'></div> -->
+<div class="icon calender" style="background: white;" onclick='openApp("app/calender/index.html","Calendar","55%","40%")'>
+              <p id="dayOfWeek"></p>
+              <h1 id="currentDate"></h1>
+          </div>
+<script>
+              function getDayOfWeek(dayIndex) {
+                  const daysOfWeek = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+                  return daysOfWeek[dayIndex];
+              }
+              const currentDate = new Date();
+              document.getElementById('dayOfWeek').innerText = getDayOfWeek(currentDate.getDay());
+              document.getElementById('currentDate').innerText = currentDate.getDate();
+</script>
+<div class="icon" style="background-image:url('ThunderOs\ Apps/Appshop.png');" onclick='openApp("https://shadowolfofficial.github.io/appshop/app.html","AppShop","90%","90%")'></div>
+<div class="icon" style="background-image:url('icon/settings.png');" onclick='openApp("/Tos/ThunderOs\ Apps/Set/index.html","Settings","90%","90%")'></div>
+<div class="icon" style="background-image:url('/Tos/information.png');" onclick='openApp("/Tos/Information.html","Information","90%","90%")'></div>
+        </div>
+    </div>
+<div class="appFrame" id="theApp">
+<div class="bar">
+<div class="control">
+<div class="red" style="background-color: red;" onclick="closeApp()"></div>
+<div class="green" style="background-color: lime;" onclick="appFullScreen()"></div>
+</div>
+<div class="appName">Settings</div>
+</div>
+<iframe src="app/settings.html" sandbox="allow-downloads allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation" allowfullscreen frameborder="0" id="appWindowIframe"></iframe>
+</div>
+</body>
+</html>

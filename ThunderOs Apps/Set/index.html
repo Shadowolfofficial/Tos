@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramètres</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Paramètres</h1>
+  <p>╔════╗╔╗─╔╗╔╗─╔╗╔═╗─╔╗╔═══╗╔═══╗╔═══╗╔═══╗╔═══╗<br />║╔╗╔╗║║║─║║║║─║║║║╚╗║║╚╗╔╗║║╔══╝║╔═╗║║╔═╗║║╔═╗║<br />╚╝║║╚╝║╚═╝║║║─║║║╔╗╚╝║─║║║║║╚══╗║╚═╝║║║─║║║╚══╗<br />──║║──║╔═╗║║║─║║║║╚╗║║─║║║║║╔══╝║╔╗╔╝║║─║║╚══╗║<br />──║║──║║─║║║╚═╝║║║─║║║╔╝╚╝║║╚══╗║║║╚╗║╚═╝║║╚═╝║<br />──╚╝──╚╝─╚╝╚═══╝╚╝─╚═╝╚═══╝╚═══╝╚╝╚═╝╚═══╝╚═══╝</p>
+  <p><strong>ThunderOs a été créé le 8 décembre 2022</strong>: (<span id="age"></span> ans)</p>
+  <script>
+      function calculateAge(birthDate) {
+          var today = new Date();
+          var birthDateObj = new Date(birthDate);
+          var age = today.getFullYear() - birthDateObj.getFullYear();
+          var m = today.getMonth() - birthDateObj.getMonth();
+          if (m < 0 || (m === 0 && today.getDate() < birthDateObj.getDate())) {
+              age--;
+          }
+          return age;
+      }
+
+      document.getElementById('age').textContent = calculateAge('2022-12-08');
+  </script>
+  <p><strong>Version V1 Stable</strong>: 1.20.03.24</p>
+  <p>Appareil s&eacute;curis&eacute; par ThunderSecurity</p>
+  <p>Official OS by ThunderGlitch</p>
+  <p><strong>Internet</strong></p>
+  <label class="switch">
+      <input type="checkbox" class="checkbox" checked>
+      <div class="slider round"></div>
+  </label>
+  <p id="ip-address"></p>
+  <script>
+      // Récupérer l'adresse IP
+      function getIPAddress() {
+          fetch('https://api.ipify.org?format=json')
+              .then(response => response.json())
+              .then(data => {
+                  const ip = data.ip;
+                  document.getElementById('ip-address').textContent = 'Adresse IP : ' + ip;
+              })
+              .catch(error => {
+                  console.log('Une erreur s\'est produite lors de la récupération de l\'adresse IP :', error);
+              });
+      }
+
+      // Appeler les fonctions de détection après le chargement de la page
+      window.addEventListener('load', function() {
+          getIPAddress();
+      });
+  </script>
+  <p><strong>Compte</strong></p>
+  <p>ThunderBrows&nbsp;(Anonyme Mode)</p>
+    <div id="passwordSection" style="display: none;">
+        <label for="password">Définir le mot de passe :</label>
+        <input type="password" id="password" name="password" class="password-input">
+        <button id="setPassword">Définir le mot de passe</button>
+    </div>
+  <div class="sliding-switch">
+    <div class="slider-container">
+        <div class="slider-title-container">
+            <span class="slider-title"><strong>Galerie Secrète</strong></span>
+        </div>
+        <div class="sliding-switch">
+            <input type="checkbox" id="galleryToggle" class="switch-checkbox" />
+            <div class="outer-switch-box">
+                <div class="inner-switch-box">
+                    <span class="status-text checked-text">On &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span class="outer-button">
+                        <span class="inner-button"></span>
+                    </span>
+                    <span class="status-text unchecked-text">Off</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="accessGallery" style="display: none;">Accédez à la galerie</button>
+  <p style="margin-top: 5px;"></p>
+
+    <button id="resetPassword">⚠️ Réinitialiser ThunderOs ⚠️</button>
+    <script src="script.js"></script>
+</body>
+</html>
