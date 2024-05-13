@@ -32,7 +32,7 @@
             color: #000;
             margin-top: 5px;
         }
-        .dark-theme {
+       .dark-theme {
             background-color: #121212; /* Fond gris foncé */
             color: #fff;
         }
@@ -63,15 +63,15 @@
                 clock.style.backgroundColor = '#121212'; // Noir très légèrement transparent
                 document.getElementById('date').style.color = '#fff'; // Blanc
                 document.getElementById('customText').style.color = '#fff'; // Blanc
-                localStorage.setItem('theme', 'dark');
-                localStorage.setItem('backgroundColor', '#121212');
+                // Suppression de la ligne suivante pour éviter d'enregistrer la couleur de fond dans le navigateur
+                // localStorage.setItem('backgroundColor', '#121212');
             } else {
                 clock.classList.remove('dark-theme');
                 clock.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'; // Blanc très légèrement transparent
                 document.getElementById('date').style.color = '#000'; // Noir
                 document.getElementById('customText').style.color = '#000'; // Noir
-                localStorage.setItem('theme', 'light');
-                localStorage.setItem('backgroundColor', 'rgba(255, 255, 255, 0.5)');
+                // Suppression de la ligne suivante pour éviter d'enregistrer la couleur de fond dans le navigateur
+                // localStorage.setItem('backgroundColor', 'rgba(255, 255, 255, 0.5)');
             }
         }
 
@@ -79,7 +79,7 @@
             const clock = document.getElementById('clock');
             const date = document.getElementById('date');
             const customText = document.getElementById('customText');
-            const currentTheme = clock.classList.contains('dark-theme') ? 'dark' : 'light';
+            const currentTheme = clock.classList.contains('dark-theme')? 'dark' : 'light';
             let randomColor;
             do {
                 const r = Math.floor(Math.random() * 256);
@@ -88,41 +88,29 @@
                 randomColor = `rgba(${r}, ${g}, ${b}, 0.5)`;
             } while ((randomColor === localStorage.getItem('backgroundColor')) || (currentTheme === 'dark' && randomColor === '#121212') || (currentTheme === 'light' && randomColor === 'rgba(255, 255, 255, 0.5)'));
             clock.style.backgroundColor = randomColor;
-            localStorage.setItem('backgroundColor', randomColor);
+            // Suppression de la ligne suivante pour éviter d'enregistrer la couleur de fond dans le navigateur
+            // localStorage.setItem('backgroundColor', randomColor);
             const brightness = (parseInt(randomColor.split(',')[0].slice(5), 10) * 299 + parseInt(randomColor.split(',')[1].trim(), 10) * 587 + parseInt(randomColor.split(',')[2].trim(), 10) * 114) / 1000;
-            const textColor = brightness > 128 ? 'black' : 'white';
+            const textColor = brightness > 128? 'black' : 'white';
             date.style.color = textColor;
             customText.style.color = textColor;
         }
 
-        function loadTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.getElementById('clock').classList.add('dark-theme');
-                const clock = document.getElementById('clock');
-                const date = document.getElementById('date');
-                const customText = document.getElementById('customText');
-                clock.style.backgroundColor = '#121212'; // Noir très légèrement transparent
-                date.style.color = '#fff'; // Blanc
-                customText.style.color = '#fff'; // Blanc
-                updateClock(); // Appel à la mise à jour de l'horloge
-            }
-        }
+        // Suppression de la fonction loadBackgroundColor car elle n'est plus nécessaire
+        // function loadBackgroundColor() {
+        //     const savedColor = localStorage.getItem('backgroundColor');
+        //     if (savedColor) {
+        //         document.getElementById('clock').style.backgroundColor = savedColor;
+        //         const brightness = (parseInt(savedColor.split(',')[0].slice(5), 10) * 299 + parseInt(savedColor.split(',')[1].trim(), 10) * 587 + parseInt(savedColor.split(',')[2].trim(), 10) * 114) / 1000;
+        //         const textColor = brightness > 128? 'black' : 'white';
+        //         document.getElementById('date').style.color = textColor;
+        //         document.getElementById('customText').style.color = textColor;
+        //         updateClock(); // Appel à la mise à jour de l'horloge
+        //     }
+        // }
 
-        function loadBackgroundColor() {
-            const savedColor = localStorage.getItem('backgroundColor');
-            if (savedColor) {
-                document.getElementById('clock').style.backgroundColor = savedColor;
-                const brightness = (parseInt(savedColor.split(',')[0].slice(5), 10) * 299 + parseInt(savedColor.split(',')[1].trim(), 10) * 587 + parseInt(savedColor.split(',')[2].trim(), 10) * 114) / 1000;
-                const textColor = brightness > 128 ? 'black' : 'white';
-                document.getElementById('date').style.color = textColor;
-                document.getElementById('customText').style.color = textColor;
-                updateClock(); // Appel à la mise à jour de l'horloge
-            }
-        }
+        // loadBackgroundColor(); // Suppression de cette ligne
 
-        loadTheme();
-        loadBackgroundColor();
         setInterval(updateClock, 1000); // Mettre à jour l'heure chaque seconde
     </script>
 </body>
