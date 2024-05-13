@@ -44,39 +44,44 @@
   </style>
   <div class="container">
 <div class="icon">
-<input type="file" id="background-file" style="display:none;" />
-<img id="reset-background" src="effacer.png" width="60" height="60" onclick="resetBackground()" style="border-radius: 12px;">
-<p id="reset-background-text";">Effacer</p>
-<script>
-          document.body.addEventListener('dblclick', function() {
-              document.getElementById('background-file').click();
-          });
+    <input type="file" id="background-file" style="display:none;" />
+    <img id="reset-background" src="effacer.png" width="60" height="60" onclick="resetBackground()" style="border-radius: 12px;">
+    <p id="reset-background-text";">Effacer</p>
+    <script>
+        // Variable globale pour stocker temporairement l'image de fond
+        var wallpaper = '';
 
-          document.getElementById('background-file').addEventListener('change', function(event) {
-              const file = event.target.files[0];
-              if (file) {
-                  const reader = new FileReader();
-                  reader.onload = function(e) {
-                      localStorage.setItem('wallpaper', e.target.result);
-                      document.body.style.backgroundImage = `url(${e.target.result})`;
-                  };
-                  reader.readAsDataURL(file);
-              }
-          });
+        document.body.addEventListener('dblclick', function() {
+            document.getElementById('background-file').click();
+        });
 
-          function resetBackground() {
-              localStorage.removeItem('wallpaper');
-              document.body.style.backgroundImage = '';
-          }
+        document.getElementById('background-file').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Stocker l'image de fond dans la variable globale au lieu de localStorage
+                    wallpaper = e.target.result;
+                    document.body.style.backgroundImage = `url(${e.target.result})`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
-          document.addEventListener('DOMContentLoaded', function() {
-              const savedImage = localStorage.getItem('wallpaper');
-              if (savedImage) {
-                  document.body.style.backgroundImage = `url(${savedImage})`;
-              }
-          });
-</script>
-    </div>
+        function resetBackground() {
+            // Réinitialiser l'image de fond à une valeur vide
+            wallpaper = '';
+            document.body.style.backgroundImage = '';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Utiliser la variable globale pour réappliquer l'image de fond si nécessaire
+            if (wallpaper) {
+                document.body.style.backgroundImage = `url(${wallpaper})`;
+            }
+        });
+    </script>
+</div>
 <div class="icon" onclick='openApp("app/discord.html","Discord","90%","90%")'>
 <img  src="ThunderOs Apps/Discord.png" width="60" height="60" style="border-radius: 30%;">
 <p class="headingText">Discord</p>
