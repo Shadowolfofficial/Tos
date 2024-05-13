@@ -32,7 +32,7 @@
             color: #000;
             margin-top: 5px;
         }
-        .dark-theme {
+       .dark-theme {
             background-color: #212529; /* Fond gris foncé */
             color: #fff;
         }
@@ -57,7 +57,8 @@
         function toggleTheme() {
             const clock = document.getElementById('clock');
             const isDark = clock.classList.toggle('dark-theme');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            // Suppression de la ligne suivante pour éviter d'enregistrer le thème dans le navigateur
+            // localStorage.setItem('theme', isDark? 'dark' : 'light');
             // Changer la couleur du texte et du rectangle en fonction du thème
             const date = document.getElementById('date');
             const customText = document.getElementById('customText');
@@ -72,21 +73,22 @@
             }
         }
 
-        function loadTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.getElementById('clock').classList.add('dark-theme');
-                // Appliquer les styles pour le thème sombre
-                const clock = document.getElementById('clock');
-                const date = document.getElementById('date');
-                const customText = document.getElementById('customText');
-                clock.style.backgroundColor = '#212529';
-                date.style.color = '#fff';
-                customText.style.color = '#fff';
-            }
-        }
+        // Suppression de la fonction loadTheme car elle n'est plus nécessaire
+        // function loadTheme() {
+        //     const savedTheme = localStorage.getItem('theme');
+        //     if (savedTheme === 'dark') {
+        //         document.getElementById('clock').classList.add('dark-theme');
+        //         // Appliquer les styles pour le thème sombre
+        //         const clock = document.getElementById('clock');
+        //         const date = document.getElementById('date');
+        //         const customText = document.getElementById('customText');
+        //         clock.style.backgroundColor = '#212529';
+        //         date.style.color = '#fff';
+        //         customText.style.color = '#fff';
+        //     }
+        // }
 
-        loadTheme();
+        // loadTheme(); // Suppression de cette ligne
         setInterval(updateClock, 1000);
     </script>
 </body>
