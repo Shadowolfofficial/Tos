@@ -1,3 +1,3 @@
 ### ThunderOs powered by iMac Web
 ### Not completed Yet
-### [Open ThunderOs](linkr.it/tos)
+### [Open ThunderOs](bit.ly/tosy)
