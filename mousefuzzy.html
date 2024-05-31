@@ -4,32 +4,112 @@
   <meta charset="UTF-8">
   <title>ThunderOs Fuzzy</title>
   <style>
-    #iframe-wrapper iframe {
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    #container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    #iframe-wrapper {
       position: absolute;
       top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
       width: 100%;
       height: 100%;
-      filter: blur(1000px);
-      transition: filter 0.1s;
+      z-index: 1; /* S'assure que l'iframe est en dessous de l'overlay */
     }
-    #iframe-wrapper.unblur iframe {
-      filter: none;
+    #iframe-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      filter: blur(20px); /* Flou par défaut */
+      transition: filter 0.0s ease-in-out; /* Instantané */
+    }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8); /* Fond noir initial */
+      z-index: 3; /* S'assure que le fond noir est au-dessus de l'iframe */
+      pointer-events: none; /* Permet de cliquer à travers l'overlay */
+    }
+    .brightness-slider {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 2; /* Barre de réglage en dessous de l'overlay */
+      width: 200px;
+      background-color: rgba(0, 0, 0, 0.7); /* Fond de la barre de réglage */
+      border-radius: 10px;
+      padding: 10px;
+      backdrop-filter: blur(5px); /* Flou pour la barre de réglage */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    .brightness-slider input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      background: #ddd;
+      outline: none;
+      margin: 0;
+    }
+    .brightness-slider input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #4CAF50;
+      cursor: pointer;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    }
+    .brightness-slider input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border: 0;
+      border-radius: 50%;
+      background: #4CAF50;
+      cursor: pointer;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
     }
   </style>
 </head>
 <body>
-  <div id="iframe-wrapper">
-<iframe src="mouseframe.html" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0%;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>  </div>
+  <div id="container">
+    <div id="iframe-wrapper">
+      <iframe src="mouseframe.html" frameborder="0"></iframe>
+    </div>
+    <div class="brightness-slider">
+      <input type="range" min="0" max="1" value="0.8" step="0.01" id="brightness-slider">
+    </div>
+    <div class="overlay"></div>
+  </div>
   <script>
     const iframeWrapper = document.getElementById('iframe-wrapper');
+    const overlay = document.querySelector('.overlay');
+    const iframe = iframeWrapper.querySelector('iframe');
+    const brightnessSlider = document.getElementById('brightness-slider');
+
     iframeWrapper.addEventListener('mouseover', () => {
-      iframeWrapper.classList.add('unblur');
+      iframe.style.filter = 'blur(0px)'; /* Enlève le flou quand la souris est sur la page */
     });
+
     iframeWrapper.addEventListener('mouseout', () => {
-      iframeWrapper.classList.remove('unblur');
+      iframe.style.filter = 'blur(20px)'; /* Ajoute un flou plus intense quand la souris quitte la page */
+    });
+
+    brightnessSlider.addEventListener('input', (event) => {
+      const brightness = event.target.value;
+      overlay.style.backgroundColor = `rgba(0, 0, 0, ${brightness})`;
     });
   </script>
 </body>
