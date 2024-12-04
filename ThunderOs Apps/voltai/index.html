@@ -3,50 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VoltAI</title>
     <style>
         body {
             margin: 0;
+            padding: 0;
+            overflow: hidden; /* Empêche le défilement global */
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #22232e;
-            color: #e0ffff;
-            font-family: Arial, sans-serif;
+            overflow: hidden;
         }
 
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .animated-button {
-            background: #42455a;
-            color: #e0ffff;
+        iframe {
+            position: absolute;
+            top: -320px; /* Décale l'iframe pour masquer le haut */
+            width: 100%;
+            height: calc(100% + 61px); /* Ajuste la hauteur pour compenser le décalage */
             border: none;
-            padding: 15px 30px;
-            margin: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
-        }
-
-        .animated-button:hover {
-            background: #00c2cb;
-            transform: scale(1.05);
-        }
-
-        .animated-button:active {
-            transform: scale(0.95);
         }
     </style>
 </head>
 <body>
-    <div class="button-container">
-        <button class="animated-button" onclick="window.location.href='chat.html'">Chat 💬</button>
-        <button class="animated-button" onclick="window.location.href='vision.html'">VoltVision 👀</button>
+    <div class="iframe-container">
+        <!-- Iframe qui charge directement le site -->
+        <iframe 
+            src="https://toolbaz.com/writer/chat-gpt-alternative" 
+            sandbox="allow-same-origin allow-scripts allow-forms">
+        </iframe>
     </div>
 </body>
 </html>
