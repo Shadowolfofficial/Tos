@@ -739,35 +739,7 @@ const cryptos = [
 
 function getRandomCryptos(n) {
     return cryptos.sort(() => 0.5 - Math.random()).slice(0, n);
-}
-
-document.body.addEventListener('dblclick', function() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = function(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      // Définir le fond d'écran
-      document.body.style.backgroundImage = `url(${e.target.result})`;
-      
-      // Sauvegarder l'URL de l'image dans le localStorage
-      localStorage.setItem('wallpaper', e.target.result);
-    };
-    reader.readAsDataURL(file);
-  };
-  input.click();
-});
-
-// Charger le fond d'écran sauvegardé au chargement de la page
-window.addEventListener('load', function() {
-  const savedWallpaper = localStorage.getItem('wallpaper');
-  if (savedWallpaper) {
-    document.body.style.backgroundImage = `url(${savedWallpaper})`;
-  }
-});
-        
+}        
 function updateCryptoPrices() {
     const cryptoWidget = document.getElementById('crypto-widget');
     const selectedCryptos = getRandomCryptos(3);
