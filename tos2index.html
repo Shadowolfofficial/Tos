@@ -854,7 +854,6 @@ function createNewWindow(appName) {
     if (existingWindow) {
         restoreWindow(appName);
         return;
-    }
     const newWindow = document.createElement('div');
     newWindow.className = 'window';
     newWindow.id = `window-${Date.now()}`;
