@@ -702,6 +702,33 @@ function getDayOfWeek(dayIndex) {
   return daysOfWeek[dayIndex];
 }
 
+document.body.addEventListener('dblclick', function() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      // Définir le fond d'écran
+      document.body.style.backgroundImage = `url(${e.target.result})`;
+      
+      // Sauvegarder l'URL de l'image dans le localStorage
+      localStorage.setItem('wallpaper', e.target.result);
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+});
+
+// Charger le fond d'écran sauvegardé au chargement de la page
+window.addEventListener('load', function() {
+  const savedWallpaper = localStorage.getItem('wallpaper');
+  if (savedWallpaper) {
+    document.body.style.backgroundImage = `url(${savedWallpaper})`;
+  }
+});
+    
 const currentDate = new Date();
 document.getElementById('dayOfWeek').innerText = getDayOfWeek(currentDate.getDay());
 document.getElementById('currentDate').innerText = currentDate.getDate();
@@ -847,34 +874,6 @@ window.addEventListener('load', () => {
     initDragAndDrop();
     loadDockPositions(); // Charger les positions sauvegardées
 });
-
-document.body.addEventListener('dblclick', function() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = function(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      // Définir le fond d'écran
-      document.body.style.backgroundImage = `url(${e.target.result})`;
-      
-      // Sauvegarder l'URL de l'image dans le localStorage
-      localStorage.setItem('wallpaper', e.target.result);
-    };
-    reader.readAsDataURL(file);
-  };
-  input.click();
-});
-
-// Charger le fond d'écran sauvegardé au chargement de la page
-window.addEventListener('load', function() {
-  const savedWallpaper = localStorage.getItem('wallpaper');
-  if (savedWallpaper) {
-    document.body.style.backgroundImage = `url(${savedWallpaper})`;
-  }
-});
-
         
 function createNewWindow(appName) {
     const existingWindow = Array.from(document.querySelectorAll('.window')).find(w => w.dataset.app === appName);
