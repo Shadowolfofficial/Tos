@@ -850,6 +850,12 @@ window.addEventListener('load', () => {
 
 
 function createNewWindow(appName) {
+    const existingWindow = Array.from(document.querySelectorAll('.window')).find(w => w.dataset.app === appName);
+    if (existingWindow) {
+        restoreWindow(appName);
+        return;
+    }
+}
     const newWindow = document.createElement('div');
     newWindow.className = 'window';
     newWindow.id = `window-${Date.now()}`;
@@ -1245,6 +1251,16 @@ function setupWindowControls(windowElement) {
     };
 }
 
+function restoreWindow(appName) {
+    const windows = document.querySelectorAll('.window');
+    windows.forEach(window => {
+        if (window.dataset.app === appName) {
+            window.style.display = 'flex'; // Affiche à nouveau la fenêtre
+        }
+    });
+    updateDockIndicators();
+}
+        
 // Chargement des paramètres sauvegardés
 window.onload=function(){
   // Charger les paramètres sauvegardés pour le dock et le fond d'écran
