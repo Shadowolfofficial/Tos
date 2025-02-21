@@ -1,3 +1,3 @@
 ### ThunderOs powered by iMac Web
 ### Not completed Yet
-### [Open ThunderOs](bit.ly/tosy)
+### [Open ThunderOs](https://xos.pages.dev/)
