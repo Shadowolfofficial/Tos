@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>ThunderOs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --accent: #007aff;
+      --bg: #181c22;
+      --glass: rgba(30,34,40,0.82);
+      --window-bg: rgba(36,40,47,0.88);
+      --window-shadow: 0 8px 40px 0 #0004, 0 1.5px 6px #0002;
+      --radius: 22px;
+      --transition: 0.25s cubic-bezier(.4,2,.6,1);
+      --clock-font: 'Inter', 'Segoe UI', Arial, sans-serif;
+    }
+    html, body {
+      height: 100%;
+      margin: 0; padding: 0;
+      background: var(--bg);
+      font-family: var(--clock-font);
+      overflow: hidden;
+      user-select: none;
+      touch-action: manipulation;
+      transition: filter 0.3s cubic-bezier(.4,2,.6,1);
+    }
+    #background {
+      position: fixed; inset: 0; z-index: 0;
+      background-size: cover;
+      background-position: center;
+      transition: background-image var(--transition), filter 0.7s;
+      filter: blur(0px) brightness(0.93);
+    }
+    #background video {
+      position: absolute; left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      min-width: 100vw; min-height: 100vh;
+      object-fit: cover;
+      filter: blur(0px) brightness(0.93);
+      z-index: 0;
+      background: #000;
+      pointer-events: none;
+    }
+    #date-time {
+      position: absolute;
+      top: 6vh; left: 50%; transform: translateX(-50%);
+      color: #fff;
+      text-align: center;
+      font-size: 3.2rem;
+      text-shadow: 0 2px 16px #000a;
+      z-index: 2;
+      letter-spacing: 0.03em;
+      background: rgba(30,34,40,0.13);
+      border-radius: 18px;
+      padding: 0.15em 1.2em;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 2px 14px #0002;
+      animation: fadeInDown 0.7s;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateX(-50%) translateY(-40px);}
+      to { opacity: 1; transform: translateX(-50%) translateY(0);}
+    }
+    #apps-dock {
+      position: fixed;
+      bottom: 2vh; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 2vw;
+      background: rgba(30,34,40,0.74);
+      border-radius: 32px;
+      padding: 0.8em 2em;
+      box-shadow: 0 4px 32px #0007;
+      z-index: 3;
+      backdrop-filter: blur(10px) saturate(1.2);
+      animation: fadeInUp 0.7s;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(40px);}
+      to { opacity: 1; transform: translateX(-50%) translateY(0);}
+    }
+    .dock-app {
+      width: 54px; height: 54px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      background: none;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.18s, box-shadow 0.18s;
+      box-shadow: 0 0 0 #0000;
+    }
+    .dock-app img {
+      width: 32px; height: 32px;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+    }
+    .dock-app:hover {
+      background: rgba(255,255,255,0.09);
+      transform: scale(1.13) rotate(-3deg);
+      box-shadow: 0 4px 16px var(--accent)33;
+    }
+    #home-apps {
+      position: absolute;
+      top: 25vh; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 2vw;
+      z-index: 2;
+      animation: fadeInUp 1s;
+    }
+    .home-app {
+      width: 68px; height: 68px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.07);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background 0.22s, transform 0.18s, box-shadow 0.18s;
+    }
+    .home-app img {
+      width: 40px; height: 40px;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+    }
+    .home-app:hover {
+      background: #fff3;
+      transform: scale(1.11) rotate(2deg);
+      box-shadow: 0 4px 16px var(--accent)33;
+    }
+    #windows-container {
+      position: fixed; inset: 0; z-index: 101; pointer-events: none;
+    }
+    .window {
+      position: absolute;
+      width: 95vw;
+      height: 75vh;
+      max-width: 600px;
+      max-height: 90vh;
+      left: 50%; top: 50%;
+      transform: translate(-50%,-50%);
+      background: var(--window-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--window-shadow);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      pointer-events: all;
+      animation: windowIn 0.45s cubic-bezier(.4,2,.6,1);
+      transition: box-shadow 0.2s, transform 0.22s, width 0.2s, height 0.2s;
+      will-change: transform;
+      border: 1.5px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(16px) saturate(1.2);
+      z-index: 102;
+    }
+    @keyframes windowIn {
+      from { transform: translate(-50%,-50%) scale(0.96) translateY(40px); opacity: 0;}
+      to   { transform: translate(-50%,-50%) scale(1) translateY(0); opacity: 1;}
+    }
+    @keyframes windowOut {
+      from { transform: translate(-50%,-50%) scale(1) translateY(0); opacity: 1;}
+      to   { transform: translate(-50%,-50%) scale(0.97) translateY(40px); opacity: 0;}
+    }
+    .window-bar {
+      background: rgba(255,255,255,0.09);
+      height: 44px;
+      display: flex; align-items: center;
+      cursor: grab; user-select: none;
+      padding: 0 1em;
+      font-size: 1.11em; color: #fff;
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+      justify-content: space-between;
+      transition: background 0.2s;
+      font-family: var(--clock-font);
+    }
+    .window-bar:hover {
+      background: rgba(255,255,255,0.13);
+    }
+    .window-bar .close {
+      width: 28px; height: 28px;
+      background: none;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; cursor: pointer;
+      font-size: 1.2em; margin-left: 0.5em;
+      transition: background 0.15s, transform 0.15s;
+      border: none;
+    }
+    .window-bar .close svg {
+      display: block;
+      width: 22px; height: 22px;
+      stroke: #fff; stroke-width: 2.5;
+    }
+    .window-bar .close:hover {
+      background: #ff4b4b;
+      transform: scale(1.1);
+    }
+    .window-bar .fullscreen-btn {
+      width: 28px; height: 28px;
+      background: none;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; cursor: pointer;
+      font-size: 1.2em; margin-left: 0.5em;
+      transition: background 0.15s, transform 0.15s;
+      border: none;
+    }
+    .window-bar .fullscreen-btn svg {
+      display: block;
+      width: 22px; height: 22px;
+      stroke: var(--accent); stroke-width: 2.2;
+    }
+    .window-bar .fullscreen-btn:hover {
+      background: #e6f0ff;
+      transform: scale(1.1);
+    }
+    .window-content {
+      flex: 1; background: #fff0;
+      overflow: auto;
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+    }
+    .fullscreen-native {
+      position: fixed !important;
+      top: 0 !important; left: 0 !important;
+      width: 100vw !important; height: 100vh !important;
+      max-width: 100vw !important; max-height: 100vh !important;
+      border-radius: 0 !important;
+      z-index: 999 !important;
+      transition: all 0.2s;
+    }
+    #settings-panel {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 95vw; max-width: 400px;
+      background: var(--glass);
+      border-radius: 22px;
+      box-shadow: 0 8px 32px #0008;
+      padding: 2em 1.5em 1.5em 1.5em;
+      color: #fff; z-index: 200;
+      display: none; flex-direction: column; gap: 1.5em;
+      animation: windowIn 0.4s;
+      border: 1.5px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(18px) saturate(1.2);
+      min-width: 0;
+      min-height: 0;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    #settings-panel.active { display: flex; }
+    #settings-panel h2 {
+      margin-top: 0; font-size: 1.23em;
+      letter-spacing: 0.05em; color: var(--accent);
+    }
+    #settings-panel .close {
+      position: absolute;
+      top: 18px; right: 18px;
+      width: 28px; height: 28px;
+      background: none;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; cursor: pointer;
+      font-size: 1.2em;
+      transition: background 0.15s, transform 0.15s;
+      border: none;
+      z-index: 10;
+    }
+    #settings-panel .close svg {
+      display: block;
+      width: 22px; height: 22px;
+      stroke: #fff; stroke-width: 2.5;
+    }
+    #settings-panel .close:hover {
+      background: #ff4b4b;
+      transform: scale(1.1);
+    }
+    .settings-group { margin-bottom: 1em; }
+    .settings-group label {
+      display: block; margin-bottom: 0.4em; font-size: 0.98em;
+    }
+    .settings-group select, .settings-group input[type="file"], .settings-group input[type="password"] {
+      width: 100%; padding: 0.4em;
+      border-radius: 8px; border: none;
+      font-size: 1em; margin-bottom: 0.6em;
+      background: #232527bb; color: #fff;
+    }
+    .settings-group button, .settings-group .toggle-btn {
+      margin-top: 0.5em; padding: 0.5em 1em;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 1em; cursor: pointer;
+      transition: background 0.15s;
+      display: inline-block;
+    }
+    .settings-group button:hover, .settings-group .toggle-btn:hover { background: #005ac1; }
+    .toggle-btn {
+      background: #232527bb;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+      transition: background 0.18s, color 0.18s;
+      margin-left: .7em;
+    }
+    .toggle-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+    .settings-actions {
+      display: flex; gap: 0.7em; justify-content: flex-end;
+    }
+    /* Centre de contrôle */
+    #control-center-btn {
+      position: fixed; top: 2vh; right: 2vw; z-index: 10;
+      background: rgba(30,34,40,0.7);
+      border-radius: 50%;
+      width: 54px; height: 54px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px #0004;
+      border: none;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      animation: fadeInDown 1s;
+    }
+    #control-center-btn:hover {
+      background: var(--accent); box-shadow: 0 2px 18px var(--accent)33; transform: scale(1.08);
+    }
+    #control-center-btn img {
+      width: 28px; height: 28px;
+      pointer-events: none;
+      user-select: none;
+    }
+    #control-center {
+      position: fixed; top: 2vw; right: 2vw; z-index: 2000;
+      width: 340px; max-width: 98vw;
+      background: rgba(36,40,47,0.97);
+      border-radius: 24px;
+      box-shadow: 0 8px 40px #0009;
+      padding: 1.3em 1.4em 1.2em 1.4em;
+      color: #fff;
+      display: none; flex-direction: column; gap: 1.2em;
+      animation: controlIn 0.5s;
+      border: 1.5px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(18px) saturate(1.2);
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+    @keyframes controlIn {
+      from { opacity: 0; transform: translateY(-30px) scale(.96);}
+      to { opacity: 1; transform: translateY(0) scale(1);}
+    }
+    #control-center.active { display: flex; }
+    #control-center h3 {
+      margin: 0 0 0.8em 0; font-size: 1.18em; color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    .cc-row { display: flex; align-items: center; gap: 1em; }
+    .cc-label { font-size: 1em; flex: 1; }
+    .cc-slider {
+      flex: 2;
+      accent-color: var(--accent);
+      width: 100%;
+      margin: 0 0.2em;
+      height: 4px;
+      border-radius: 6px;
+      background: #232527bb;
+    }
+    .cc-notifications {
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 0.7em 1em;
+      max-height: 120px;
+      overflow-y: auto;
+      font-size: 0.98em;
+      box-shadow: 0 2px 8px #0002;
+      margin-bottom: 0.3em;
+      min-height: 2.2em;
+      transition: background 0.2s;
+    }
+    .cc-notif {
+      margin-bottom: 0.5em;
+      padding-bottom: 0.3em;
+      border-bottom: 1px solid #23252744;
+      display: flex; align-items: center; gap: 0.7em;
+      animation: notifIn 0.5s;
+    }
+    .cc-notif:last-child { border-bottom: none; margin-bottom: 0; }
+    @keyframes notifIn {
+      from { opacity: 0; transform: translateY(-10px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .cc-notif-icon {
+      width: 22px; height: 22px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cc-notif-msg { flex: 1; }
+    .cc-notif-time { color: #aaa; font-size: 0.92em; margin-left: 0.5em;}
+    #control-center .close {
+      position: absolute; top: 12px; right: 12px;
+      width: 28px; height: 28px;
+      background: none;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; cursor: pointer;
+      font-size: 1.2em;
+      transition: background 0.15s, transform 0.15s;
+      border: none;
+      z-index: 10;
+    }
+    #control-center .close svg {
+      display: block;
+      width: 22px; height: 22px;
+      stroke: #fff; stroke-width: 2.5;
+    }
+    #control-center .close:hover {
+      background: #ff4b4b;
+      transform: scale(1.1);
+    }
+    .cc-clear-btn {
+      background: #232527bb;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+      border-radius: 8px;
+      font-size: 0.98em;
+      padding: 0.35em 1.1em;
+      margin-bottom: 0.6em;
+      margin-top: 0.2em;
+      cursor: pointer;
+      transition: background 0.16s, color 0.16s;
+      float: right;
+    }
+    .cc-clear-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    @media (max-width: 700px) {
+      #date-time { font-size: 1.3rem; top: 3vh;}
+      #apps-dock { gap: 1vw; padding: 0.5em 1em;}
+      #home-apps { gap: 1vw;}
+      .window, #settings-panel {
+        min-width: 0 !important;
+        min-height: 0 !important;
+        width: 98vw !important;
+        max-width: 98vw !important;
+        height: 82vh !important;
+        max-height: 90vh !important;
+        left: 50% !important; top: 50% !important; transform: translate(-50%,-50%) !important;
+      }
+      #lock-card { min-width: 90vw; padding: 1.2em 0.5em 1em 0.5em;}
+      #control-center { width: 98vw; right: 1vw; top: 1vw; max-height: 97vh;}
+      #control-center-btn { right: 1vw; top: 1vw; }
+    }
+  </style>
+</head>
+<body>
+  <div id="background"></div>
+  <div id="date-time"></div>
+  <div id="apps-dock"></div>
+  <div id="home-apps"></div>
+  <div id="windows-container"></div>
+  <div id="settings-panel"></div>
+  <button id="control-center-btn" title="Centre de contrôle">
+    <img src="https://cdn-icons-png.flaticon.com/512/1828/1828859.png" alt="Contrôle" />
+  </button>
+  <div id="control-center"></div>
+  <div id="lock-screen" style="display:none"></div>
+  <script>
+    // --- ThunderOS Core State ---
+    const defaultState = {
+      clockFont: "'Inter', 'Segoe UI', Arial, sans-serif",
+      wallpaper: "default",
+      wallpaperType: "image",
+      code: "",
+      codeEnabled: false,
+      dockApps: [
+        {id:"yt", name:"Notes", icon:"icon/notes.png", url:"https://litewrite.net/"},
+        {id:"calc", name:"Application", icon:"icon/application.png", url:"https://raw.githack.com/Shadowolfofficial/tosapp/main/index.html"},
+        {id:"web", name:"VoltAI", icon:"voltai.png", url:"voltai.html"},
+        {id:"calc", name:"ThunderBrows", icon:"icon/thunderbrows.png", url:"https://raw.githack.com/Shadowolfofficial/tosapp/main/thunderbrows.html"},
+        {id:"settings", name:"Paramètres", icon:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/2699.svg"}
+      ],
+      homeApps: [
+        {id:"notes", name:"ThunderTV", icon:"icon/thundertv.png", url:"thundertv.html"},
+        {id:"weather", name:"SoundPage", icon:"icon/soundpage.png", url:"https://raw.githack.com/Shadowolfofficial/tosapp/main/thunderbrows.html?baseUrl=s9age"},
+        {id:"news", name:"Discord", icon:"icon/discord.png", url:"discord.html"},
+        {id:"maps", name:"Info", icon:"info.png", url:"info.html"}
+      ],
+      wallpaperList: [
+        {id:"default", name:"Origine", type:"image", src:"https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80"},
+        {id:"city", name:"Ville", type:"image", src:"https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1200&q=80"},
+        {id:"waves", name:"Vagues", type:"image", src:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80"},
+        {id:"northern", name:"Aurores", type:"image", src:"https://images.unsplash.com/photo-1444065381814-865dc9da92c0?auto=format&fit=crop&w=1200&q=80"},
+        {id:"clouds", name:"Nuages", type:"image", src:"https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80"},
+        {id:"matrix", name:"Matrix", type:"video", src:"https://www.w3schools.com/howto/rain.mp4"}
+      ],
+      importedWallpaper: null,
+      notifications: [],
+      brightness: 1
+    };
+
+    let state = {};
+    function saveState() {
+      localStorage.setItem('thunderos', JSON.stringify(state));
+    }
+    function loadState() {
+      let s = localStorage.getItem('thunderos');
+      if(s) state = {...defaultState, ...JSON.parse(s)};
+      else state = {...defaultState};
+    }
+    function resetState() {
+      state = {...defaultState};
+      saveState();
+      location.reload();
+    }
+
+    // --- UI Renderers ---
+    function renderWallpaper() {
+      const bg = document.getElementById('background');
+      let wp = state.importedWallpaper || state.wallpaperList.find(w=>w.id===state.wallpaper);
+      if(!wp) wp = state.wallpaperList[0];
+      if(wp.type==="image") {
+        bg.innerHTML = "";
+        bg.style.backgroundImage = `url('${wp.src}')`;
+      } else if(wp.type==="video") {
+        bg.innerHTML = "";
+        bg.style.backgroundImage = "none";
+        let video = document.createElement("video");
+        video.src = wp.src;
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.playsInline = true;
+        video.setAttribute('playsinline', '');
+        video.onerror = function() {
+          bg.innerHTML = `<div style="color:#fff;background:#000c;padding:1em;border-radius:16px;position:absolute;top:10vh;left:50%;transform:translateX(-50%);z-index:2;text-align:center;">Impossible de lire la vidéo.<br>Format non supporté par ce navigateur.</div>`;
+        };
+        bg.appendChild(video);
+      }
+    }
+    function renderClock() {
+      const dt = document.getElementById('date-time');
+      dt.style.fontFamily = state.clockFont;
+      const now = new Date();
+      const h = now.getHours().toString().padStart(2,"0");
+      const m = now.getMinutes().toString().padStart(2,"0");
+      const date = now.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+      dt.innerHTML = `<div>${h}:${m}</div><div style="font-size:1.2rem;margin-top:0.3em;">${date}</div>`;
+    }
+    function renderDock() {
+      const dock = document.getElementById('apps-dock');
+      dock.innerHTML = "";
+      state.dockApps.forEach(app=>{
+        let btn = document.createElement('div');
+        btn.className = "dock-app";
+        btn.innerHTML = `<img src="${app.icon}" alt="${app.name}" loading="lazy" />`;
+        btn.title = app.name;
+        btn.onclick = ()=>openApp(app.id);
+        dock.appendChild(btn);
+      });
+    }
+    function renderHomeApps() {
+      const home = document.getElementById('home-apps');
+      home.innerHTML = "";
+      state.homeApps.forEach(app=>{
+        let btn = document.createElement('div');
+        btn.className = "home-app";
+        btn.innerHTML = `<img src="${app.icon}" alt="${app.name}" loading="lazy" />`;
+        btn.title = app.name;
+        btn.onclick = ()=>openApp(app.id);
+        home.appendChild(btn);
+      });
+    }
+    function renderSettings() {
+      const panel = document.getElementById('settings-panel');
+      panel.innerHTML = `
+        <button class="close" title="Fermer">
+          <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+        <h2>Paramètres</h2>
+        ThunderOs a été créé le 8 décembre 2022
+        Version V4 Bacon: 4.21.07.25
+        <div class="settings-group">
+          <label>Police de l'horloge</label>
+          <select id="clock-font">
+            <option value="'Inter', 'Segoe UI', Arial, sans-serif">Inter</option>
+            <option value="'Roboto Mono', monospace">Roboto Mono</option>
+            <option value="'Segoe UI', Arial, sans-serif">Segoe UI</option>
+            <option value="'Courier New', monospace">Courier New</option>
+            <option value="'Arial', sans-serif">Arial</option>
+          </select>
+        </div>
+        <div class="settings-group">
+          <label>Fond d'écran</label>
+          <select id="wallpaper-list"></select>
+          <button id="import-wallpaper">Importer une image/vidéo</button>
+          <input type="file" id="wallpaper-file" style="display:none" accept="image/*,video/*" />
+          <button id="reset-wallpaper" style="margin-left:0.5em">Remettre par défaut</button>
+        </div>
+<div class="settings-group" style="display:none;">
+  <label>Code d'accès</label>
+  <button class="toggle-btn${state.codeEnabled ? ' active' : ''}" id="toggle-code">${state.codeEnabled ? 'Désactiver' : 'Activer'}</button>
+  <input type="password" id="set-code" placeholder="Nouveau code" autocomplete="new-password" style="display:${state.codeEnabled?'block':'none'}" />
+</div>
+
+        <div class="settings-group settings-actions">
+          <button id="save-btn">Sauvegarder</button>
+          <button id="restore-btn">Restaurer</button>
+          <button id="reset-btn">Réinitialiser ThunderOS</button>
+        </div>
+      `;
+      panel.querySelector('.close').onclick = () => panel.classList.remove('active');
+
+      let wplist = panel.querySelector("#wallpaper-list");
+      state.wallpaperList.forEach(w=>{
+        let opt = document.createElement("option");
+        opt.value = w.id;
+        opt.textContent = w.name + (w.type==="video" ? " (vidéo)" : "");
+        wplist.appendChild(opt);
+      });
+      wplist.value = state.wallpaper;
+
+      panel.querySelector("#clock-font").value = state.clockFont;
+
+      panel.querySelector("#clock-font").onchange = e=>{
+        state.clockFont = e.target.value;
+        saveState(); renderClock();
+      };
+      wplist.onchange = e=>{
+        state.wallpaper = e.target.value;
+        state.importedWallpaper = null;
+        saveState(); renderWallpaper();
+      };
+      panel.querySelector("#import-wallpaper").onclick = () => {
+        panel.querySelector("#wallpaper-file").click();
+      };
+      panel.querySelector("#wallpaper-file").onchange = e => {
+        let file = e.target.files[0];
+        if (!file) return;
+        let type = "";
+        if (file.type.startsWith("video/")) type = "video";
+        else if (file.type.startsWith("image/")) type = "image";
+        else {
+          alert("Format de fichier non supporté. Importez une image ou une vidéo.");
+          return;
+        }
+        if (file.size > 30*1024*1024) {
+          alert("Fichier trop volumineux (max 30 Mo)");
+          return;
+        }
+        let reader = new FileReader();
+        reader.onload = function(ev) {
+          state.importedWallpaper = { type: type, src: ev.target.result };
+          saveState();
+          renderWallpaper();
+        };
+        reader.readAsDataURL(file);
+      };
+      panel.querySelector("#reset-wallpaper").onclick = () => {
+        state.wallpaper = "default";
+        state.importedWallpaper = null;
+        saveState(); renderWallpaper();
+      };
+
+      const toggleBtn = panel.querySelector("#toggle-code");
+      const codeInput = panel.querySelector("#set-code");
+      toggleBtn.onclick = () => {
+        state.codeEnabled = !state.codeEnabled;
+        if(!state.codeEnabled) state.code = "";
+        saveState();
+        renderSettings();
+      };
+      codeInput.onblur = e => {
+        state.code = e.target.value;
+        saveState();
+      };
+
+      panel.querySelector("#save-btn").onclick = () => {
+        let blob = new Blob([JSON.stringify(state)], {type:"application/json"});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "thunderos-save.json";
+        a.click();
+        setTimeout(()=>URL.revokeObjectURL(url), 1000);
+      };
+      panel.querySelector("#restore-btn").onclick = () => {
+        let inp = document.createElement("input");
+        inp.type = "file";
+        inp.accept = ".json,application/json";
+        inp.onchange = e => {
+          let file = e.target.files[0];
+          if(!file) return;
+          let reader = new FileReader();
+          reader.onload = function(ev) {
+            try {
+              let data = JSON.parse(ev.target.result);
+              localStorage.setItem('thunderos', JSON.stringify(data));
+              location.reload();
+            } catch(e) { alert("Fichier invalide."); }
+          };
+          reader.readAsText(file);
+        };
+        inp.click();
+      };
+      panel.querySelector("#reset-btn").onclick = () => {
+        if(confirm("Tout réinitialiser ?")) resetState();
+      };
+    }
+
+    // --- Centre de contrôle ---
+    function renderControlCenter() {
+      const cc = document.getElementById('control-center');
+      cc.innerHTML = `
+        <button class="close" title="Fermer">
+          <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+        <h3>Centre de contrôle</h3>
+        <div class="cc-row">
+          <span class="cc-label">Luminosité</span>
+          <input type="range" class="cc-slider" id="brightness-slider" min="0.3" max="1.2" step="0.01" value="${state.brightness || 1}">
+        </div>
+        <div>
+          <div style="font-size:1em;margin-bottom:0.3em;display:flex;align-items:center;justify-content:space-between;">
+            <span>Notifications</span>
+            <button class="cc-clear-btn" id="cc-clear-btn" title="Effacer les notifications">Effacer</button>
+          </div>
+          <div class="cc-notifications" id="cc-notifications"></div>
+        </div>
+      `;
+      cc.querySelector('.close').onclick = ()=>cc.classList.remove('active');
+      cc.querySelector('#brightness-slider').oninput = e=>{
+        setBrightness(parseFloat(e.target.value));
+      };
+      cc.querySelector('#cc-clear-btn').onclick = ()=>{
+        state.notifications = [];
+        saveState();
+        renderNotifications();
+      };
+      renderNotifications();
+    }
+    function renderNotifications() {
+      const notifBox = document.getElementById('cc-notifications');
+      if(!notifBox) return;
+      if(!state.notifications || state.notifications.length === 0) {
+        notifBox.innerHTML = "<span style='color:#aaa'>Aucune notification</span>";
+        return;
+      }
+      notifBox.innerHTML = "";
+      state.notifications.slice(-6).reverse().forEach(n=>{
+        notifBox.innerHTML += `
+          <div class="cc-notif">
+            <span class="cc-notif-icon"><img src="${n.icon}" style="width:22px;height:22px"></span>
+            <span class="cc-notif-msg">${n.text}</span>
+            <span class="cc-notif-time">${n.time}</span>
+          </div>
+        `;
+      });
+    }
+    function addNotification(text, icon) {
+      if(!state.notifications) state.notifications = [];
+      const now = new Date();
+      const time = now.getHours().toString().padStart(2,"0")+":"+now.getMinutes().toString().padStart(2,"0");
+      state.notifications.push({text, icon, time});
+      if(state.notifications.length > 20) state.notifications = state.notifications.slice(-20);
+      saveState();
+      renderNotifications();
+    }
+    function setBrightness(val) {
+      state.brightness = val;
+      document.body.style.filter = `brightness(${val})`;
+      saveState();
+    }
+
+    // --- Fenêtres d'applications ---
+    let zCounter = 102;
+    function openApp(id) {
+      if(id==="settings") return toggleSettings();
+      let app = [...state.dockApps, ...state.homeApps].find(a=>a.id===id);
+      if(!app) return;
+      let win = document.createElement('div');
+      win.className = "window";
+      win.style.zIndex = ++zCounter;
+      win.innerHTML = `
+        <div class="window-bar">
+          <span>${app.name}</span>
+          <span style="display:flex;align-items:center">
+            <button class="fullscreen-btn" title="Plein écran" tabindex="-1">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/></svg>
+            </button>
+            <button class="close" title="Fermer" tabindex="-1">
+              <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+            </button>
+          </span>
+        </div>
+        <div class="window-content"></div>
+      `;
+      win.querySelector('.close').onclick = () => {
+        win.style.animation = "windowOut 0.33s cubic-bezier(.4,2,.6,1)";
+        setTimeout(() => win.remove(), 310);
+      };
+      win.querySelector('.fullscreen-btn').onclick = e => {
+        e.stopPropagation();
+        if (!document.fullscreenElement) {
+          if(win.requestFullscreen) {
+            win.classList.add("fullscreen-native");
+            win.requestFullscreen();
+          }
+        } else {
+          document.exitFullscreen();
+        }
+      };
+      let bar = win.querySelector('.window-bar');
+      bar.ondblclick = () => {};
+      let isDrag = false, offsetX=0, offsetY=0;
+      bar.onmousedown = e => {
+        if(window.innerWidth < 700) return;
+        if(e.target.classList.contains('close') || e.target.classList.contains('fullscreen-btn')) return;
+        isDrag = true;
+        win.style.transition = "none";
+        offsetX = e.clientX - win.offsetLeft;
+        offsetY = e.clientY - win.offsetTop;
+        win.style.zIndex = ++zCounter;
+        document.body.style.cursor = "grabbing";
+      };
+      document.onmousemove = e => {
+        if(isDrag) {
+          win.style.left = (e.clientX - offsetX) + "px";
+          win.style.top = (e.clientY - offsetY) + "px";
+          win.style.transform = "";
+        }
+      };
+      document.onmouseup = () => {
+        if(isDrag) win.style.transform = "";
+        isDrag = false; win.style.transition = "box-shadow 0.2s, transform 0.22s";
+        document.body.style.cursor = "";
+      };
+      win.onclick = () => win.style.zIndex = ++zCounter;
+      if(app.url) {
+        win.querySelector('.window-content').innerHTML = `<iframe src="${app.url}" style="width:100%;height:100%;border:none;background:#fff;border-radius:0 0 22px 22px"></iframe>`;
+      } else {
+        win.querySelector('.window-content').innerHTML = `<div style="padding:1em">Application non disponible.</div>`;
+      }
+      document.getElementById('windows-container').appendChild(win);
+    }
+
+    // --- Paramètres ---
+    function toggleSettings() {
+      const panel = document.getElementById('settings-panel');
+      if(panel.classList.contains('active')) {
+        panel.classList.remove('active');
+      } else {
+        renderSettings();
+        panel.classList.add('active');
+      }
+    }
+
+    // --- Boot ---
+    function boot() {
+      loadState();
+      if(state.codeEnabled && state.code) showLockScreen();
+      renderWallpaper();
+      renderClock();
+      renderDock();
+      renderHomeApps();
+      setBrightness(state.brightness || 1);
+      setInterval(renderClock, 1000);
+      document.body.addEventListener('mousedown', e => {
+        const panel = document.getElementById('settings-panel');
+        if(panel.classList.contains('active') && !panel.contains(e.target) && e.target.id !== "settings-btn") {
+          panel.classList.remove('active');
+        }
+        const cc = document.getElementById('control-center');
+        if(cc.classList.contains('active') && !cc.contains(e.target) && e.target.id !== "control-center-btn" && !e.target.closest("#control-center-btn")) {
+          cc.classList.remove('active');
+        }
+      });
+      renderControlCenter();
+    }
+    boot();
+
+    document.addEventListener('fullscreenchange', () => {
+      const win = document.querySelector('.fullscreen-native');
+      if(win && !document.fullscreenElement) {
+        win.classList.remove('fullscreen-native');
+      }
+    });
+
+    // --- Centre de contrôle bouton ---
+    document.getElementById('control-center-btn').onclick = function(e) {
+      e.stopPropagation();
+      // Ne s'affiche que si aucune fenêtre n'est ouverte
+      const winOpen = document.querySelector('.window');
+      if(winOpen) return;
+      const cc = document.getElementById('control-center');
+      if(cc.classList.contains('active')) cc.classList.remove('active');
+      else {
+        renderControlCenter();
+        cc.classList.add('active');
+      }
+    };
+    // Masquer le bouton du centre de contrôle si une fenêtre est ouverte
+    function updateCCBtnVisibility() {
+      const ccBtn = document.getElementById('control-center-btn');
+      const winOpen = document.querySelector('.window');
+      ccBtn.style.display = winOpen ? "none" : "flex";
+    }
+    // Sur ouverture/fermeture fenêtre
+    const observer = new MutationObserver(updateCCBtnVisibility);
+    observer.observe(document.getElementById('windows-container'), {childList:true, subtree:false});
+    updateCCBtnVisibility();
+  </script>
+</body>
+</html>
