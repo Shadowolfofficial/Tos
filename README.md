@@ -1,3 +1,3 @@
-### ThunderOs powered by iMac Web
+### ThunderOs
 ### Not completed Yet
 ### [Open ThunderOs](https://xos.pages.dev/)
