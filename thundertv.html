@@ -1,1 +1,137 @@
-<iframe src="https://raw.githack.com/Shadowolfofficial/appshop/main/thundertv/index.html" allowfullscreen sandbox = "allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0%;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Deux iframes avec input</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background: #f5f7fa;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    .iframe-box {
+      position: relative;
+      flex: 1;
+      border-left: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      background: white;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Formulaire centré */
+    .center-form {
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .form-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 4px;
+    }
+
+    .form-subtitle {
+      font-size: 14px;
+      color: #7f8c8d;
+      margin-bottom: 12px;
+    }
+
+    .url-input {
+      width: 280px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s;
+    }
+    .url-input:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 4px rgba(52,152,219,0.5);
+    }
+
+    .url-btn {
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .url-btn:hover {
+      background: #2980b9;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .full-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Iframe de gauche -->
+    <div class="iframe-box">
+      <iframe src="https://audin213.com/"></iframe>
+    </div>
+
+    <!-- Zone de droite avec formulaire au départ -->
+    <div class="iframe-box" id="rightBox">
+      <div id="urlForm" class="center-form">
+        <div class="form-title">ThunderTV</div>
+        <div class="form-subtitle">Écrivez l’adresse du site que vous voulez (sauf Fanstream) qui est sur la page de gauche. Ne mettez pas https://, puis cliquez sur confirmer.</div>
+        <input type="text" id="urlInput" class="url-input" placeholder="https://..." />
+        <button class="url-btn" onclick="loadIframe()">Confirmer</button>
+      </div>
+      <iframe id="iframeRight" class="hidden"></iframe>
+    </div>
+  </div>
+
+  <script>
+    function loadIframe() {
+      let url = document.getElementById("urlInput").value.trim();
+      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        url = "https://" + url;
+      }
+      const iframe = document.getElementById("iframeRight");
+      iframe.src = url;
+      // Masquer tout le reste
+      document.querySelector(".container").style.display = "none";
+      iframe.classList.remove("hidden");
+      iframe.classList.add("full-screen");
+      document.body.appendChild(iframe); // pour l'afficher en plein écran
+    }
+  </script>
+</body>
+</html>
