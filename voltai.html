@@ -1,37 +1,321 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Empêche le défilement global */
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c0d12">
+<title>VoltAI — ThunderOS</title>
 
-        .iframe-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-        }
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0c0d12;
+  --surface: #15171e;
+  --border: #292c35;
+  --accent: #ffcd38;
+  --text: #f7f7f8;
+  --muted: #969aa7;
+}
 
-        iframe {
-            position: absolute;
-            top: -300px; /* Décale l'iframe pour masquer le haut */
-            width: 100%;
-            height: calc(100% + 61px); /* Ajuste la hauteur pour compenser le décalage */
-            border: none;
-        }
-    </style>
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  font: inherit;
+}
+
+.toolbar {
+  height: 58px;
+  flex-shrink: 0;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--accent);
+  color: #111;
+  font-size: 23px;
+  font-weight: 900;
+}
+
+.name {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -.5px;
+}
+
+.name span {
+  color: var(--accent);
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.protection {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #b5b8c3;
+  font-size: 11px;
+}
+
+.shield {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #45d48b;
+}
+
+.refresh {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  background: #22252e;
+  border: 1px solid #343742;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+.refresh:hover {
+  background: #343843;
+}
+
+.refresh:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.refresh svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.viewer {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: #fff;
+  overflow: hidden;
+}
+
+iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: white;
+}
+
+.loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 100%;
+  height: 3px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  width: 35%;
+  height: 100%;
+  background: var(--accent);
+  animation: progress 1.2s ease-in-out infinite;
+}
+
+.loading.hidden {
+  display: none;
+}
+
+@keyframes progress {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(390%);
+  }
+}
+
+.footer {
+  height: 28px;
+  flex-shrink: 0;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.footer strong {
+  color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .toolbar {
+    height: 53px;
+    padding: 0 12px;
+  }
+
+  .subtitle {
+    display: none;
+  }
+
+  .protection {
+    font-size: 0;
+  }
+
+  .footer {
+    height: 25px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading::after {
+    animation: none;
+    transform: none;
+    width: 100%;
+  }
+}
+</style>
 </head>
+
 <body>
-    <div class="iframe-container">
-        <!-- Iframe qui charge directement le site -->
-        <iframe 
-            src="https://toolbaz.com/writer/chat-gpt-alternative" 
-        </iframe>
+
+<header class="toolbar">
+  <div class="brand">
+    <div class="logo">V</div>
+
+    <div>
+      <div class="name">Volt<span>AI</span></div>
+      <div class="subtitle">Assistant intelligent</div>
     </div>
+  </div>
+
+  <div class="actions">
+    <div class="protection"
+         title="Pop-ups et redirections externes limités">
+      <span class="shield"></span>
+      Protection activée
+    </div>
+
+    <button
+      class="refresh"
+      id="refreshButton"
+      type="button"
+      title="Actualiser VoltAI"
+      aria-label="Actualiser VoltAI">
+
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 7v5h-5"></path>
+        <path d="M4 17v-5h5"></path>
+        <path d="M5.5 9A7 7 0 0 1 18.5 7L20 12"></path>
+        <path d="M18.5 15A7 7 0 0 1 5.5 17L4 12"></path>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main class="viewer">
+
+  <div class="loading" id="loading"></div>
+
+  <iframe
+    id="voltFrame"
+    src="https://toolbaz.com/writer/chat-gpt-alternative"
+    title="VoltAI — Assistant intelligent"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-downloads"
+    allow="clipboard-read; clipboard-write; fullscreen"
+    allowfullscreen>
+  </iframe>
+
+</main>
+
+<footer class="footer">
+  <span>VoltAI · ThunderOs</span>
+  <span>Propulsé par <strong>Toolbaz</strong></span>
+</footer>
+
+<script>
+"use strict";
+
+const frame = document.getElementById("voltFrame");
+const refreshButton = document.getElementById("refreshButton");
+const loading = document.getElementById("loading");
+
+const HOME_URL =
+  "https://toolbaz.com/writer/chat-gpt-alternative";
+
+function setLoading() {
+  loading.classList.remove("hidden");
+}
+
+frame.addEventListener("load", () => {
+  loading.classList.add("hidden");
+});
+
+refreshButton.addEventListener("click", () => {
+  setLoading();
+  frame.src = HOME_URL;
+});
+</script>
+
 </body>
 </html>
