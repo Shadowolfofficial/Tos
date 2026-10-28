@@ -2,9 +2,11 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>ThunderOs</title>
+  <title>ThunderOS — Bureau</title>
+  <meta name="theme-color" content="#10131b" />
+  <meta name="description" content="Bureau interactif ThunderOS : applications, personnalisation et outils." />
   <meta name="referrer" content="no-referrer-when-downgrade" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="c9c58e8829ad92a9a1364cf6bb4d9b7dc7390ee3" content="c9c58e8829ad92a9a1364cf6bb4d9b7dc7390ee3" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet" />
   <style>
@@ -32,15 +34,15 @@
       position: fixed; inset: 0; z-index: 0;
       background-size: cover;
       background-position: center;
-      transition: background-image var(--transition), filter 0.7s;
-      filter: blur(0px) brightness(0.93);
+      transition: opacity .25s;
+      filter: brightness(0.93);
     }
     #background video {
       position: absolute; left: 0; top: 0;
       width: 100vw; height: 100vh;
       min-width: 100vw; min-height: 100vh;
       object-fit: cover;
-      filter: blur(0px) brightness(0.93);
+      filter: brightness(0.93);
       z-index: 0;
       background: #000;
       pointer-events: none;
@@ -57,7 +59,7 @@
       background: rgba(30,34,40,0.13);
       border-radius: 18px;
       padding: 0.15em 1.2em;
-      backdrop-filter: blur(4px);
+      
       box-shadow: 0 2px 14px #0002;
       animation: fadeInDown 0.7s;
     }
@@ -69,12 +71,12 @@
       position: fixed;
       bottom: 2vh; left: 50%; transform: translateX(-50%);
       display: flex; gap: 2vw;
-      background: rgba(30,34,40,0.74);
+      background: #202632ee;
       border-radius: 32px;
       padding: 0.8em 2em;
       box-shadow: 0 4px 32px #0007;
       z-index: 3;
-      backdrop-filter: blur(10px) saturate(1.2);
+      
       animation: fadeInUp 0.7s;
     }
     @keyframes fadeInUp {
@@ -144,11 +146,11 @@
       overflow: hidden;
       display: flex; flex-direction: column;
       pointer-events: all;
-      animation: windowIn 0.45s cubic-bezier(.4,2,.6,1);
+      animation: windowIn .2s ease-out;
       transition: box-shadow 0.2s, transform 0.22s, width 0.2s, height 0.2s;
       will-change: transform;
       border: 1.5px solid rgba(255,255,255,0.07);
-      backdrop-filter: blur(16px) saturate(1.2);
+      
       z-index: 102;
     }
     @keyframes windowIn {
@@ -237,9 +239,9 @@
       padding: 2em 1.5em 1.5em 1.5em;
       color: #fff; z-index: 200;
       display: none; flex-direction: column; gap: 1.5em;
-      animation: windowIn 0.4s;
+      animation: controlIn .2s ease-out;
       border: 1.5px solid rgba(255,255,255,0.07);
-      backdrop-filter: blur(18px) saturate(1.2);
+      
       min-width: 0;
       min-height: 0;
       max-height: 90vh;
@@ -329,15 +331,15 @@
     #control-center {
       position: fixed; top: 2vw; right: 2vw; z-index: 2000;
       width: 340px; max-width: 98vw;
-      background: rgba(36,40,47,0.97);
+      background: #202632;
       border-radius: 24px;
       box-shadow: 0 8px 40px #0009;
       padding: 1.3em 1.4em 1.2em 1.4em;
       color: #fff;
       display: none; flex-direction: column; gap: 1.2em;
-      animation: controlIn 0.5s;
+      animation: controlIn .2s ease-out;
       border: 1.5px solid rgba(255,255,255,0.07);
-      backdrop-filter: blur(18px) saturate(1.2);
+      
       max-height: 92vh;
       overflow-y: auto;
     }
@@ -446,6 +448,39 @@
       #control-center { width: 98vw; right: 1vw; top: 1vw; max-height: 97vh;}
       #control-center-btn { right: 1vw; top: 1vw; }
     }
+
+    /* ThunderOS : finition moderne et adaptation mobile */
+    :root { --accent:#ffcd38; --bg:#10131b; --radius:16px; }
+    #background { background-color:#10131b; }
+    #date-time { background:#171b2499; border:1px solid #ffffff1a; font-weight:700; font-size:clamp(2rem,5vw,3.2rem); }
+    #apps-dock { gap:12px; padding:10px 15px; border:1px solid #ffffff20; max-width:calc(100vw - 20px); overflow-x:auto; scrollbar-width:none; }
+    #apps-dock::-webkit-scrollbar { display:none; }
+    .dock-app { flex:0 0 54px; }
+    #home-apps { flex-wrap:wrap; justify-content:center; width:min(95vw,650px); gap:18px; }
+    .home-app { border:1px solid #ffffff1a; background:#202632bb; }
+    .window { background:#202632; border:1px solid #ffffff25; box-shadow:0 18px 65px #0009; }
+    .window-bar { flex-shrink:0; background:#2b3240; touch-action:none; }
+    .window-content { min-height:0; }
+    #settings-panel, #control-center { background:#202632; border:1px solid #ffffff24; }
+    #settings-panel h2, #control-center h3 { color:var(--accent); }
+    .settings-group button, .settings-group .toggle-btn { color:#171717; }
+    .settings-group button:hover { background:#ffe080; }
+    .fullscreen-native { transform:none!important; inset:0!important; width:100vw!important; height:100dvh!important; max-width:none!important; max-height:none!important; }
+    button, .dock-app, .home-app { -webkit-tap-highlight-color:transparent; }
+    button:focus-visible, .dock-app:focus-visible, .home-app:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+    @media(max-width:700px) {
+      #date-time { top:8vh; width:max-content; max-width:90vw; padding:12px 22px; }
+      #home-apps { top:29vh; gap:14px; padding:0 10px; }
+      .home-app { width:65px; height:65px; }
+      #apps-dock { bottom:max(12px,env(safe-area-inset-bottom)); gap:7px; padding:8px; border-radius:20px; }
+      .dock-app { flex-basis:47px; width:47px; height:47px; }
+      .dock-app img { width:30px; height:30px; }
+      .window { width:calc(100vw - 16px)!important; height:calc(100dvh - 85px)!important; max-height:none!important; border-radius:14px; }
+      .window.fullscreen-native { width:100vw!important; height:100dvh!important; border-radius:0!important; }
+      #settings-panel { width:calc(100vw - 20px)!important; height:auto!important; max-height:85dvh!important; padding:24px 18px; }
+      #control-center { width:calc(100vw - 20px); right:10px; top:10px; max-height:85dvh; }
+    }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; } }
   </style>
 </head>
 <body>
@@ -496,12 +531,18 @@
 
     let state = {};
     function saveState() {
-      localStorage.setItem('thunderos', JSON.stringify(state));
+      try { localStorage.setItem('thunderos', JSON.stringify(state)); } catch (e) { console.warn('Stockage ThunderOS indisponible', e); }
     }
     function loadState() {
-      let s = localStorage.getItem('thunderos');
-      if(s) state = {...defaultState, ...JSON.parse(s)};
-      else state = {...defaultState};
+      try {
+        const saved = JSON.parse(localStorage.getItem('thunderos') || 'null');
+        state = saved && typeof saved === 'object'
+          ? {...defaultState, ...saved,
+             dockApps: Array.isArray(saved.dockApps) ? saved.dockApps : defaultState.dockApps,
+             homeApps: Array.isArray(saved.homeApps) ? saved.homeApps : defaultState.homeApps,
+             wallpaperList: defaultState.wallpaperList}
+          : {...defaultState};
+      } catch { state = {...defaultState}; }
     }
     function resetState() {
       state = {...defaultState};
@@ -523,6 +564,7 @@
         let video = document.createElement("video");
         video.src = wp.src;
         video.autoplay = true;
+        video.preload = "none";
         video.loop = true;
         video.muted = true;
         video.playsInline = true;
@@ -531,6 +573,7 @@
           bg.innerHTML = `<div style="color:#fff;background:#000c;padding:1em;border-radius:16px;position:absolute;top:10vh;left:50%;transform:translateX(-50%);z-index:2;text-align:center;">Impossible de lire la vidéo.<br>Format non supporté par ce navigateur.</div>`;
         };
         bg.appendChild(video);
+        video.play().catch(() => {});
       }
     }
     function renderClock() {
@@ -548,6 +591,10 @@
       state.dockApps.forEach(app=>{
         let btn = document.createElement('div');
         btn.className = "dock-app";
+        btn.setAttribute("role", "button");
+        btn.tabIndex = 0;
+        btn.setAttribute("aria-label", app.name);
+        btn.onkeydown = e => { if(e.key === "Enter" || e.key === " ") { e.preventDefault(); openApp(app.id); } };
         btn.innerHTML = `<img src="${app.icon}" alt="${app.name}" loading="lazy" />`;
         btn.title = app.name;
         btn.onclick = ()=>openApp(app.id);
@@ -560,6 +607,10 @@
       state.homeApps.forEach(app=>{
         let btn = document.createElement('div');
         btn.className = "home-app";
+        btn.setAttribute("role", "button");
+        btn.tabIndex = 0;
+        btn.setAttribute("aria-label", app.name);
+        btn.onkeydown = e => { if(e.key === "Enter" || e.key === " ") { e.preventDefault(); openApp(app.id); } };
         btn.innerHTML = `<img src="${app.icon}" alt="${app.name}" loading="lazy" />`;
         btn.title = app.name;
         btn.onclick = ()=>openApp(app.id);
@@ -647,7 +698,10 @@
         let reader = new FileReader();
         reader.onload = function(ev) {
           state.importedWallpaper = { type: type, src: ev.target.result };
-          saveState();
+          // Les gros fichiers ne peuvent pas toujours être conservés dans localStorage.
+          if (file.size > 2 * 1024 * 1024) {
+            alert("Fond d'écran appliqué pour cette session. Pour le conserver après actualisation, utilisez un fichier de moins de 2 Mo.");
+          } else { saveState(); }
           renderWallpaper();
         };
         reader.readAsDataURL(file);
@@ -764,7 +818,7 @@
     }
     function setBrightness(val) {
       state.brightness = val;
-      document.body.style.filter = `brightness(${val})`;
+      document.getElementById("background").style.filter = `brightness(${val})`;
       saveState();
     }
 
@@ -792,45 +846,38 @@
         <div class="window-content"></div>
       `;
       win.querySelector('.close').onclick = () => {
-        win.style.animation = "windowOut 0.33s cubic-bezier(.4,2,.6,1)";
-        setTimeout(() => win.remove(), 310);
+        win.remove();
       };
       win.querySelector('.fullscreen-btn').onclick = e => {
         e.stopPropagation();
-        if (!document.fullscreenElement) {
-          if(win.requestFullscreen) {
-            win.classList.add("fullscreen-native");
-            win.requestFullscreen();
-          }
-        } else {
-          document.exitFullscreen();
-        }
+        win.classList.toggle('fullscreen-native');
+        win.querySelector('.fullscreen-btn').title = win.classList.contains('fullscreen-native') ? 'Réduire' : 'Plein écran';
       };
       let bar = win.querySelector('.window-bar');
       bar.ondblclick = () => {};
-      let isDrag = false, offsetX=0, offsetY=0;
-      bar.onmousedown = e => {
-        if(window.innerWidth < 700) return;
-        if(e.target.classList.contains('close') || e.target.classList.contains('fullscreen-btn')) return;
-        isDrag = true;
-        win.style.transition = "none";
-        offsetX = e.clientX - win.offsetLeft;
-        offsetY = e.clientY - win.offsetTop;
+      // Déplacement fluide et indépendant pour chaque fenêtre.
+      let drag = null;
+      bar.addEventListener('pointerdown', e => {
+        if (window.innerWidth < 700 || e.target.closest('button')) return;
+        const rect = win.getBoundingClientRect();
+        win.style.left = rect.left + 'px';
+        win.style.top = rect.top + 'px';
+        win.style.transform = 'none';
+        win.style.transition = 'none';
         win.style.zIndex = ++zCounter;
-        document.body.style.cursor = "grabbing";
-      };
-      document.onmousemove = e => {
-        if(isDrag) {
-          win.style.left = (e.clientX - offsetX) + "px";
-          win.style.top = (e.clientY - offsetY) + "px";
-          win.style.transform = "";
-        }
-      };
-      document.onmouseup = () => {
-        if(isDrag) win.style.transform = "";
-        isDrag = false; win.style.transition = "box-shadow 0.2s, transform 0.22s";
-        document.body.style.cursor = "";
-      };
+        drag = {x:e.clientX - rect.left, y:e.clientY - rect.top};
+        bar.setPointerCapture(e.pointerId);
+      });
+      bar.addEventListener('pointermove', e => {
+        if (!drag) return;
+        const x = Math.max(0, Math.min(innerWidth - win.offsetWidth, e.clientX - drag.x));
+        const y = Math.max(0, Math.min(innerHeight - 45, e.clientY - drag.y));
+        win.style.left = x + 'px';
+        win.style.top = y + 'px';
+      });
+      const stopDrag = () => { drag = null; win.style.transition = ''; };
+      bar.addEventListener('pointerup', stopDrag);
+      bar.addEventListener('pointercancel', stopDrag);
       win.onclick = () => win.style.zIndex = ++zCounter;
       if(app.url) {
         win.querySelector('.window-content').innerHTML = `<iframe src="${app.url}" sandbox="allow-forms allow-modals allow-scripts allow-same-origin allow-downloads" frameborder="0" allowfullscreen style="width:100%;height:100%;border:none;background:#fff;border-radius:0 0 22px 22px"></iframe>`;
@@ -854,13 +901,13 @@
     // --- Boot ---
     function boot() {
       loadState();
-      if(state.codeEnabled && state.code) showLockScreen();
+      // Verrouillage désactivé (aucune fonction showLockScreen dans cette version).
       renderWallpaper();
       renderClock();
       renderDock();
       renderHomeApps();
       setBrightness(state.brightness || 1);
-      setInterval(renderClock, 1000);
+      setInterval(renderClock, 30000);
       document.body.addEventListener('mousedown', e => {
         const panel = document.getElementById('settings-panel');
         if(panel.classList.contains('active') && !panel.contains(e.target) && e.target.id !== "settings-btn") {
