@@ -1,169 +1,600 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- important pour mobile -->
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      font-family: "Segoe UI", Roboto, sans-serif;
-      background: #f5f7fa;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0c10">
+<title>ThunderTV — ThunderOS</title>
 
-    .container {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      flex-direction: row;
-    }
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0b0c10;
+  --panel: #15171d;
+  --panel2: #1d2028;
+  --border: #30333c;
+  --yellow: #ffcd38;
+  --text: #f5f5f7;
+  --muted: #9b9eaa;
+}
 
-    .iframe-box {
-      position: relative;
-      flex: 1;
-      border-left: 1px solid #ddd;
-      display: flex;
-      flex-direction: column;
-      background: white;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
 
-    /* Formulaire centré */
-    .center-form {
-      margin: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      padding: 20px;
-      text-align: center;
-      max-width: 90%;
-    }
+body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
-    .form-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: #2c3e50;
-      margin-bottom: 4px;
-    }
+button, input {
+  font: inherit;
+}
 
-    .form-subtitle {
-      font-size: 15px;
-      color: #7f8c8d;
-      margin-bottom: 12px;
-    }
+button {
+  cursor: pointer;
+}
 
-    .url-input {
-      width: 280px;
-      max-width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-      outline: none;
-      transition: 0.2s;
-    }
-    .url-input:focus {
-      border-color: #3498db;
-      box-shadow: 0 0 4px rgba(52,152,219,0.5);
-    }
+.topbar {
+  height: 62px;
+  flex-shrink: 0;
+  padding: 0 22px;
+  background: #111318;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+}
 
-    .url-btn {
-      background: #3498db;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.2s;
-      width: fit-content;
-    }
-    .url-btn:hover {
-      background: #2980b9;
-    }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
 
-    .hidden {
-      display: none;
-    }
+.logo {
+  width: 36px;
+  height: 36px;
+  background: var(--yellow);
+  color: #111;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  font-size: 19px;
+  font-weight: 900;
+}
 
-    .full-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 100;
-    }
+.brand-name {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -.6px;
+}
 
-    /* Responsive : sur mobile, mettre les iframes l’une au-dessus de l’autre */
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-      .iframe-box {
-        flex: none;
-        height: 50%;
-      }
-      .form-title {
-        font-size: 18px;
-      }
-      .form-subtitle {
-        font-size: 13px;
-      }
-      .url-input {
-        font-size: 14px;
-        padding: 10px;
-      }
-      .url-btn {
-        font-size: 14px;
-        padding: 10px 16px;
-      }
-    }
-  </style>
+.brand-name span {
+  color: var(--yellow);
+}
+
+.status {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  min-height: 0;
+  gap: 12px;
+  padding: 12px;
+}
+
+.panel {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.panel-header {
+  height: 48px;
+  flex-shrink: 0;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--yellow);
+}
+
+.panel-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.frame {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border: 0;
+  background: #000;
+}
+
+.form-area {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 28px 20px;
+}
+
+.form-content {
+  width: 100%;
+  max-width: 410px;
+  text-align: center;
+}
+
+.form-icon {
+  width: 66px;
+  height: 66px;
+  margin: 0 auto 20px;
+  display: grid;
+  place-items: center;
+  background: #ffcd3817;
+  color: var(--yellow);
+  border: 1px solid #ffcd3840;
+  border-radius: 20px;
+  font-size: 30px;
+}
+
+h1 {
+  font-size: 25px;
+  letter-spacing: -.8px;
+  margin: 0 0 12px;
+}
+
+.description {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0 0 25px;
+}
+
+.field-label {
+  display: block;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 9px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background: #0e1015;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.input-group:focus-within {
+  border-color: var(--yellow);
+}
+
+.prefix {
+  color: var(--muted);
+  font-size: 13px;
+  padding-left: 14px;
+  white-space: nowrap;
+}
+
+.url-input {
+  width: 100%;
+  min-width: 0;
+  padding: 15px 12px 15px 3px;
+  border: 0;
+  outline: none;
+  color: white;
+  background: transparent;
+  font-size: 14px;
+}
+
+.url-input::placeholder {
+  color: #777b87;
+}
+
+.submit {
+  width: 100%;
+  margin-top: 13px;
+  padding: 14px;
+  background: var(--yellow);
+  color: #111;
+  border: 0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.submit:hover {
+  opacity: .87;
+}
+
+.help {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.error {
+  display: none;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #ff8585;
+}
+
+.viewer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg);
+  flex-direction: column;
+}
+
+.viewer.active {
+  display: flex;
+}
+
+.viewer-bar {
+  height: 58px;
+  flex-shrink: 0;
+  background: #111318;
+  border-bottom: 1px solid var(--border);
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.back-btn {
+  background: var(--yellow);
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 14px;
+  color: #111;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.viewer-url {
+  flex: 1;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.viewer-frame {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border: 0;
+  background: #000;
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .brand-name {
+    font-size: 16px;
+  }
+
+  .status {
+    display: none;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(220px, 1fr) minmax(260px, 1fr);
+    gap: 9px;
+    padding: 9px;
+  }
+
+  .panel {
+    border-radius: 12px;
+  }
+
+  .panel-header {
+    height: 40px;
+  }
+
+  .form-area {
+    padding: 18px 15px;
+  }
+
+  .form-icon {
+    display: none;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .description {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+
+  .url-input {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .submit {
+    padding: 12px;
+  }
+
+  .help {
+    margin-top: 12px;
+  }
+}
+
+@media (max-height: 650px) and (min-width: 769px) {
+  .form-area {
+    padding: 15px;
+  }
+
+  .form-icon {
+    display: none;
+  }
+}
+</style>
 </head>
-<body>
-  <div class="container">
-    <!-- Iframe de gauche -->
-    <div class="iframe-box">
-      <iframe src="https://fstream.net/" allowfullscreen></iframe>
-    </div>
 
-    <!-- Zone de droite avec formulaire au départ -->
-    <div class="iframe-box" id="rightBox">
-      <div id="urlForm" class="center-form">
-        <div class="form-title">ThunderTV</div>
-        <div class="form-subtitle">
-          Écrivez l’adresse du site que vous voulez qui est sur la page en haut ou mettez stream4free.tv/tv-live-france pout la TV 
-          Ne mettez pas <b>https://</b>, puis cliquez sur confirmer.
-        </div>
-        <input type="text" id="urlInput" class="url-input" placeholder="https://..." />
-        <button class="url-btn" onclick="loadIframe()">Confirmer</button>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">T</div>
+    <div>
+      <div class="brand-name">
+        Thunder<span>TV</span>
       </div>
-      <iframe id="iframeRight" class="hidden" allowfullscreen></iframe>
+      <div class="status">Lecteur web ThunderOS</div>
     </div>
   </div>
+</header>
 
-  <script>
-    function loadIframe() {
-      let url = document.getElementById("urlInput").value.trim();
-      if (!url.startsWith("http://") && !url.startsWith("https://")) {
-        url = "https://" + url;
-      }
-      const iframe = document.getElementById("iframeRight");
-      iframe.src = url;
-      // Masquer tout le reste
-      document.querySelector(".container").style.display = "none";
-      iframe.classList.remove("hidden");
-      iframe.classList.add("full-screen");
-      document.body.appendChild(iframe); // pour l'afficher en plein écran
+<main class="workspace">
+
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="dot"></span>
+        Lien pour le lecteur
+      </div>
+      <span class="panel-label">
+        Navigateur intégré
+      </span>
+    </div>
+
+    <iframe
+      class="frame"
+      src="https://fstream.net/"
+      title="FStream"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+      allow="fullscreen; autoplay; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="dot"></span>
+        Lecteur personnalisé
+      </div>
+      <span class="panel-label">ThunderTV</span>
+    </div>
+
+    <div class="form-area">
+      <div class="form-content">
+
+        <div class="form-icon">▶</div>
+
+        <h1>Que voulez-vous regarder ?</h1>
+
+        <p class="description">
+          Écrivez l’adresse du site que vous voulez qui est sur la page a gauche ou mettez stream4free.tv/tv-live-france pour la TV.
+         
+        </p>
+
+        <form id="urlForm">
+          <label class="field-label" for="urlInput">
+            Adresse du site
+          </label>
+
+          <div class="input-group">
+            <span class="prefix">https://</span>
+
+            <input
+              id="urlInput"
+              class="url-input"
+              type="text"
+              placeholder="exemple.com"
+              autocomplete="url"
+              spellcheck="false"
+              required>
+          </div>
+
+          <button class="submit" type="submit">
+            Ouvrir dans ThunderTV
+          </button>
+
+          <div
+            class="error"
+            id="error"
+            role="alert">
+            Veuillez entrer une adresse valide.
+          </div>
+        </form>
+
+        <p class="help">
+          Saisissez une adresse avec ou sans
+          https://. Les nouveaux onglets sont
+          bloqués dans le lecteur intégré.
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="viewer" id="viewer">
+  <div class="viewer-bar">
+    <button
+      class="back-btn"
+      type="button"
+      id="backButton">
+      ← Retour
+    </button>
+
+    <span
+      class="viewer-url"
+      id="viewerUrl">
+    </span>
+  </div>
+
+  <iframe
+    class="viewer-frame"
+    id="viewerFrame"
+    title="Lecteur ThunderTV"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+    allow="fullscreen; autoplay; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<script>
+"use strict";
+
+const form = document.getElementById("urlForm");
+const input = document.getElementById("urlInput");
+const error = document.getElementById("error");
+const viewer = document.getElementById("viewer");
+const viewerFrame = document.getElementById("viewerFrame");
+const viewerUrl = document.getElementById("viewerUrl");
+const backButton = document.getElementById("backButton");
+
+function normalizeUrl(value) {
+  let url = value.trim();
+
+  if (!url) {
+    return null;
+  }
+
+  if (!/^https?:\/\//i.test(url)) {
+    url = "https://" + url;
+  }
+
+  try {
+    const parsed = new URL(url);
+
+    if (
+      parsed.protocol !== "https:" &&
+      parsed.protocol !== "http:"
+    ) {
+      return null;
     }
-  </script>
+
+    if (
+      !parsed.hostname.includes(".") &&
+      parsed.hostname !== "localhost"
+    ) {
+      return null;
+    }
+
+    return parsed.href;
+  } catch {
+    return null;
+  }
+}
+
+function openViewer(url) {
+  viewerUrl.textContent = url;
+  viewerFrame.src = url;
+  viewer.classList.add("active");
+  error.style.display = "none";
+}
+
+function closeViewer() {
+  viewer.classList.remove("active");
+  viewerFrame.src = "about:blank";
+}
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const url = normalizeUrl(input.value);
+
+  if (!url) {
+    error.style.display = "block";
+    return;
+  }
+
+  openViewer(url);
+});
+
+backButton.addEventListener("click", closeViewer);
+
+document.addEventListener("keydown", function(event) {
+  if (
+    event.key === "Escape" &&
+    viewer.classList.contains("active")
+  ) {
+    closeViewer();
+  }
+});
+</script>
+
 </body>
 </html>
