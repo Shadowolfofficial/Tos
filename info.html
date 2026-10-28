@@ -1,103 +1,495 @@
-  <!DOCTYPE html>
-  <html lang="fr">
-  <head>
-      <meta charset="UTF-8">
-      <title>INFO</title>
-      <style>
-          body {
-              font-family: 'Arial', sans-serif;
-              display: flex;
-              flex-wrap: wrap;
-              justify-content: center;
-              padding: 20px;
-              background-color: #f5f5f5;
-          }
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0c10">
 
-          .team-card {
-              width: 200px;
-              margin: 10px;
-              padding: 20px;
-              border: 1px solid #ccc;
-              border-radius: 10px;
-              box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-              text-align: center;
-              transition: transform 0.3s ease-in-out;
-          }
+<title>À propos de ThunderOS</title>
+<meta name="description" content="Découvrez ThunderOS, un environnement de bureau en ligne créé le 8 décembre 2022.">
 
-          .team-card:hover {
-              transform: scale(1.05);
-          }
+<style>
+:root {
+  --bg: #0b0c10;
+  --panel: #15171d;
+  --border: #2a2d35;
+  --yellow: #ffcd38;
+  --text: #f5f5f7;
+  --muted: #969aa6;
+}
 
-          .team-card img {
-              width: 100%;
-              height: auto;
-              border-radius: 50%;
-          }
+* {
+  box-sizing: border-box;
+}
 
-          .team-card h2 {
-              margin: 10px 0;
-          }
-      </style>
-  </head>
-  <body>
-    <div class="team-card" onclick="window.location.href='https://xos.pages.dev/'">
-        <img src="./ThunderOs-rb.png">
-        <h2>ThunderOs</h2>
-        <p>xos.pages.dev</p>
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, -apple-system,
+    BlinkMacSystemFont, "Segoe UI",
+    Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 35px 22px 55px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+
+.brand {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -.7px;
+}
+
+.brand span {
+  color: var(--yellow);
+}
+
+.tag {
+  color: var(--muted);
+  font-size: 12px;
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.logo {
+  width: 85px;
+  height: 85px;
+  margin: 0 auto 22px;
+  display: grid;
+  place-items: center;
+  background: var(--yellow);
+  color: #111;
+  border-radius: 23px;
+  font-size: 43px;
+  font-weight: 900;
+  box-shadow: 0 12px 35px #ffcd3820;
+}
+
+h1 {
+  font-size: clamp(29px, 6vw, 42px);
+  letter-spacing: -1.5px;
+  margin: 0;
+}
+
+.hero p {
+  color: var(--muted);
+  max-width: 570px;
+  margin: 14px auto 0;
+  font-size: 15px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 13px;
+  margin-bottom: 38px;
+}
+
+.info-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  padding: 20px;
+  text-align: center;
+}
+
+.info-box .value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--yellow);
+}
+
+.info-box .label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.section {
+  margin-bottom: 19px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 25px;
+}
+
+.section h2 {
+  font-size: 18px;
+  margin: 0 0 12px;
+  letter-spacing: -.4px;
+}
+
+.section p {
+  color: #b5b8c2;
+  font-size: 14px;
+  margin: 0;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 13px;
+  margin-top: 18px;
+}
+
+.feature {
+  background: #1d2027;
+  border-radius: 13px;
+  padding: 16px;
+}
+
+.feature strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.feature span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.timeline {
+  border-left: 2px solid var(--yellow);
+  padding-left: 20px;
+  margin-top: 20px;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  left: -26px;
+  top: 7px;
+  background: var(--yellow);
+  border-radius: 50%;
+}
+
+.timeline-item strong {
+  display: block;
+  color: var(--yellow);
+  font-size: 13px;
+}
+
+.timeline-item p {
+  margin-top: 5px;
+}
+
+.links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 19px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity .2s;
+}
+
+.btn:hover {
+  opacity: .8;
+}
+
+.btn-primary {
+  background: var(--yellow);
+  color: #111;
+}
+
+.btn-secondary {
+  background: #242730;
+  color: white;
+  border: 1px solid var(--border);
+}
+
+footer {
+  text-align: center;
+  color: #777b88;
+  font-size: 12px;
+  margin-top: 40px;
+}
+
+@media(max-width: 600px) {
+  .container {
+    padding: 24px 16px 40px;
+  }
+
+  .topbar {
+    margin-bottom: 38px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding: 20px;
+  }
+
+  .info-box {
+    padding: 15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <header class="topbar">
+    <div class="brand">
+      Thunder<span>Os</span>
     </div>
-    
-    <div class="team-card">
-        <a href="https://www.tiktok.com/@thunder0s" target="_blank">
-            <img src="./Information-app/tiktok.png">
-            <h2>Tiktok</h2>
-            <p>thunder0s</p>
-        </a>
-    </div>
+    <div class="tag">À propos du système</div>
+  </header>
 
-    <div class="team-card">
-        <a href="https://www.instagram.com/thunder0s.dev/" target="_blank">
-            <img src="./Information-app/Instagram.png">
-            <h2>Instagram</h2>
-            <p>thunder0s.dev</p>
-        </a>
-    </div>
+  <main>
 
-    
-      <div class="team-card">
-          <img src="./Information-app/user-icon.png">
-          <h2>MGRN</h2>
-          <p>Administrateur, créateur, fondateur, Idée, Testeur (PRO)</p>
+    <section class="hero">
+      <div class="logo">T</div>
+
+      <h1>Découvrez ThunderOs</h1>
+
+      <p>
+        Un environnement de bureau accessible
+        depuis votre navigateur, conçu pour
+        proposer une expérience inspirée
+        des systèmes d'exploitation.
+      </p>
+    </section>
+
+    <div class="info-grid">
+
+      <div class="info-box">
+        <div class="value">08/12/2022</div>
+        <div class="label">Date de création</div>
       </div>
 
-    <div class="team-card">
-        <img src="./Information-app/user-icon.png">
-        <h2>YP</h2>
-        <p>Modération avancés, Idée et Testeur</p>
+      <div class="info-box">
+        <div class="value">Web</div>
+        <div class="label">Plateforme</div>
+      </div>
+
+      <div class="info-box">
+        <div class="value">ThunderOs</div>
+        <div class="label">Nom du projet</div>
+      </div>
+
     </div>
 
-    <div class="team-card">
-        <img src="./Information-app/user-icon.png">
-        <h2>JD</h2>
-        <p>Testeur, Idée et Personnalisation</p>
-    </div>
+    <section class="section">
+      <h2>Qu'est-ce que ThunderOs ?</h2>
 
-    <div class="team-card">
-        <img src="./Information-app/user-icon.png">
-        <h2>NC</h2>
-        <p>Testeur, Idée et Personnalisation</p>
-    </div>
+      <p>
+        ThunderOS est un projet de système
+        d'exploitation en ligne créé le
+        8 décembre 2022.
 
-    <div class="team-card">
-        <img src="./Information-app/user-icon.png">
-        <h2>Keke D</h2>
-        <p>Modération, Testeur, Idée</p>
-        <p>Merci d'être l'un des premiers utilisateurs de ThunderOs et de m'avoir aidé à faire connaître cette plateforme. Ton soutien a été inestimables.</p>
-    </div>
-    
-    <div class="team-card">
-        <img src="./Information-app/user-icon.png">
-        <h2>AT</h2>
-        <p>Modération, Testeur, Idée</p>
-    </div>
-  </body>
-  </html>
+        Son objectif est de proposer une
+        interface de bureau moderne, simple
+        et personnalisable, directement
+        accessible depuis un navigateur web.
+
+        ThunderOS permet d'utiliser plusieurs
+        applications au sein d'un environnement
+        inspiré d'un véritable ordinateur.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Les fonctionnalités</h2>
+
+      <p>
+        ThunderOS regroupe plusieurs fonctions
+        dans une interface unique.
+      </p>
+
+      <div class="features">
+
+        <div class="feature">
+          <strong>Applications</strong>
+          <span>
+            Accédez à différentes applications
+            et à des jeux depuis le bureau.
+          </span>
+        </div>
+
+        <div class="feature">
+          <strong>Fenêtres</strong>
+          <span>
+            Ouvrez et organisez vos applications
+            dans des fenêtres.
+          </span>
+        </div>
+
+        <div class="feature">
+          <strong>Personnalisation</strong>
+          <span>
+            Modifiez le fond d'écran et
+            certains paramètres du système.
+          </span>
+        </div>
+
+        <div class="feature">
+          <strong>Centre de contrôle</strong>
+          <span>
+            Retrouvez des réglages et
+            les notifications du système.
+          </span>
+        </div>
+
+        <div class="feature">
+          <strong>Interface responsive</strong>
+          <span>
+            Une interface adaptée aux
+            ordinateurs et aux téléphones.
+          </span>
+        </div>
+
+        <div class="feature">
+          <strong>Expérience web</strong>
+          <span>
+            Aucun système à installer :
+            ThunderOs fonctionne dans
+            le navigateur.
+          </span>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>L'histoire de ThunderOs</h2>
+
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <strong>8 décembre 2022</strong>
+          <p>
+            Création officielle du projet
+            ThunderOs.
+          </p>
+        </div>
+
+        <div class="timeline-item">
+          <strong>Évolution du projet</strong>
+          <p>
+            Développement de l'interface,
+            du bureau, des applications
+            et des fonctionnalités.
+          </p>
+        </div>
+
+        <div class="timeline-item">
+          <strong>Aujourd'hui</strong>
+          <p>
+            ThunderOs poursuit son évolution
+            avec une interface modernisée
+            et une meilleure adaptation
+            aux appareils mobiles.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Notre objectif</h2>
+
+      <p>
+        Faire évoluer ThunderOs pour proposer
+        une expérience de bureau en ligne
+        toujours plus agréable, accessible
+        et pratique, tout en conservant
+        une interface simple à utiliser.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Retrouvez ThunderOs</h2>
+
+      <p>
+        Suivez l'évolution du projet et
+        découvrez ses nouveautés sur
+        les réseaux sociaux.
+      </p>
+
+      <div class="links">
+
+        <a class="btn btn-primary"
+           href="https://www.tiktok.com/@thunder0s"
+           target="_blank"
+           rel="noopener noreferrer">
+          TikTok
+        </a>
+
+        <a class="btn btn-secondary"
+           href="https://discord.com/invite/bN5qfCE2dV"
+           target="_blank"
+           rel="noopener noreferrer">
+          Discord
+        </a>
+
+        <a class="btn btn-secondary"
+           href="https://www.instagram.com/thunder0s.dev/"
+           target="_blank"
+           rel="noopener noreferrer">
+          Instagram
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    © ThunderOS
+    — Crée le 8 décembre 2022
+  </footer>
+
+</div>
+
+</body>
+</html>
